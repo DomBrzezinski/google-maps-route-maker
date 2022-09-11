@@ -29,7 +29,7 @@ def generate_semicircle(start_circumference,end_circumference):
         ### Changes all of the waypoints to be in a semicircle of given distance
     else:
         direct_gradient = (end_coordinates[1] - start_coordinates[1])/(end_coordinates[0] - start_coordinates[0])
-        direct_distance = 
+        direct_distance = #FINISH
         waypoints[0] = []
         
 
