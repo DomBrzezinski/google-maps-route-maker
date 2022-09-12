@@ -5,11 +5,22 @@ import datetime
 import math as maths
 from pprint import pprint
 
-
-
-API_KEY = "AIzaSyDCNGvyU0JPwZqoCq-ZyMlCx1YQsnqJG9Y"
+API_KEY = str(open("key.txt","r").read())
 gmaps = googlemaps.Client(key=API_KEY)
 ### Receives the Google Maps Client to send requests to
+
+def route_output(results):
+    for i, leg in enumerate(results[0]["legs"]):
+        print("Stop:" + str(i),
+            leg["start_address"], 
+            "==> ",
+            leg["end_address"], 
+            "distance: ",  
+            leg["distance"]["value"], 
+            "traveling Time: ",
+            leg["duration"]["value"]
+        )
+
 
 
 def generate_semicircle(start_circumference,end_circumference):
@@ -30,7 +41,7 @@ def generate_semicircle(start_circumference,end_circumference):
     else:
         direct_gradient = (end_coordinates[1] - start_coordinates[1])/(end_coordinates[0] - start_coordinates[0])
         direct_distance = maths.sqrt(((end_coordinates[0] - start_coordinates[0])**2)+((end_coordinates[1] - start_coordinates[1])**2))
-        print("INCOMPLETE")
+        ### IN THE PROCESS OF COMPLETING THE REQUEST ON LINE 89, NEED TO CREATE ELLIPSE(MATHS)
         
 
 
@@ -212,7 +223,7 @@ while not route_complete:
 
     if distance != "":
         if route_distance == distance:
-            pprint(results)
+            route_output(results)
             break
         elif route_distance < distance:
             lngr = True
@@ -224,7 +235,7 @@ while not route_complete:
 
     else:
         if route_time == time:
-            pprint(results)
+            route_output(results)
             break
         elif route_time < time:
             lngr = True
