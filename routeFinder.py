@@ -29,8 +29,8 @@ def generate_semicircle(start_circumference,end_circumference):
         ### Changes all of the waypoints to be in a semicircle of given distance
     else:
         direct_gradient = (end_coordinates[1] - start_coordinates[1])/(end_coordinates[0] - start_coordinates[0])
-        direct_distance = #FINISH
-        waypoints[0] = []
+        direct_distance = maths.sqrt(((end_coordinates[0] - start_coordinates[0])**2)+((end_coordinates[1] - start_coordinates[1])**2))
+        print("INCOMPLETE")
         
 
 
@@ -50,13 +50,12 @@ def generate_route(**kwargs):
             Calculated route to be checked for user requirements outside of the function
     """
 
-
-
-
+    global radius
     if start_coordinates == end_coordinates:
         if times_changed == 0:
+            print(kwargs)
             if kwargs["distance"] != "":
-                radius = kwargs["distance"]/(maths.pi + 2.0) 
+                radius = kwargs["distance"]/(maths.pi + 2.0)
             ### Finds the optimum radius of a semicircle route for the distance given
 
 
@@ -79,7 +78,6 @@ def generate_route(**kwargs):
                 radius *= 1.2
             else:
                 radius /= 1.3
-                print("aaaa")
         print(radius,times_changed,kwargs["longer"])
         start_semicircle = [start_coordinates[0] - radius,start_coordinates[1]]
         end_semicircle = [start_coordinates[0] + radius, start_coordinates[1]]
@@ -140,9 +138,8 @@ route_complete = False
 lngr = ""
 ### Flag for if the route needs to be longer or shorter, later a boolean, empty string means no route calculated yet
 
-
 global start_coordinates, end_coordinates,average_coordinates,times_changed,waypoints,radius
-radius = 0
+radius = 0.0
 waypoints = []
 times_changed = 0
 start_coordinates = gmaps.geocode(start_location)[0]["geometry"]["viewport"]["northeast"] ### Gets coordinates for start and end
@@ -215,6 +212,7 @@ while not route_complete:
 
     if distance != "":
         if route_distance == distance:
+            pprint(results)
             break
         elif route_distance < distance:
             lngr = True
@@ -225,12 +223,14 @@ while not route_complete:
 
     else:
         if route_time == time:
+            pprint(results)
             break
         elif route_time < time:
             lngr = True
         else:
             lngr = False
     ### If user input time, checks if the route needs to be longer or shorter
+
 
 
 
