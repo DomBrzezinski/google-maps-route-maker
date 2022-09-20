@@ -9,23 +9,30 @@ API_KEY = str(open("key.txt","r").read())
 gmaps = googlemaps.Client(key=API_KEY)
 ### Receives the Google Maps Client to send requests to
 
-def route_output(results):
+def route_output(results, distance, time):
+    """
+    Prints out the results of a directions request in a user friendly way
+    """
     for i, leg in enumerate(results[0]["legs"]):
         print("Stop:" + str(i),
             leg["start_address"], 
             "==> ",
             leg["end_address"], 
-            "distance: ",  
-            leg["distance"]["value"], 
+            "distance: ", 
+            leg["distance"]["value"],
+            "m", 
             "traveling Time: ",
-            leg["duration"]["value"]
+            leg["duration"]["value"],
+            "s"
         )
+    print("total distance :",distance, "m" )
+    print("total time :",time, "m" )
 
 
 
 def generate_semicircle(start_circumference,end_circumference):
     """
-    generates a semicicle or semi-ellipse of given radius at the start coordinates
+    Generates a semicicle or semi-ellipse of given radius at the start coordinates
     INPUT: both vertices of the semicircle, or semi-ellipse
     OUTPUT: waypoints(global variable)
     """
@@ -171,11 +178,11 @@ if end_location == start_location:
 
 else:
     waypoints.append(start_coordinates)
-    waypoints.append([(start_coordinates["lat"] + average_coordinates["lat"]/2),
-                        (start_coordinates["lng"] + average_coordinates["lng"]/2)])
+    waypoints.append([(start_coordinates[0] + average_coordinates[0]/2),
+                        (start_coordinates[1] + average_coordinates[1]/2)])
     waypoints.append(average_coordinates)
-    waypoints.append([(average_coordinates["lat"] + end_coordinates["lat"]/2),
-                        (average_coordinates["lng"] + end_coordinates["lng"]/2)])
+    waypoints.append([(average_coordinates[0] + end_coordinates[0]/2),
+                        (average_coordinates[1] + end_coordinates[1]/2)])
     waypoints.append(end_coordinates)
     ### Adds 5 waypoints between start and end to be changed later, if the start point is not the same as the end point
       
@@ -223,7 +230,7 @@ while not route_complete:
 
     if distance != "":
         if route_distance == distance:
-            route_output(results)
+            route_output(results, route_distance, route_time)
             break
         elif route_distance < distance:
             lngr = True
@@ -235,7 +242,7 @@ while not route_complete:
 
     else:
         if route_time == time:
-            route_output(results)
+            route_output(results, route_distance, route_time)
             break
         elif route_time < time:
             lngr = True
