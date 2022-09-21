@@ -30,7 +30,7 @@ def route_output(results, distance, time):
 
 
 
-def generate_semicircle(start_circumference,end_circumference):
+def generate_semicircle(**kwargs):
     """
     Generates a semicicle or semi-ellipse of given radius at the start coordinates
     INPUT: both vertices of the semicircle, or semi-ellipse
@@ -45,10 +45,21 @@ def generate_semicircle(start_circumference,end_circumference):
                         start_coordinates[1] + (maths.sin(45)*radius),]
         waypoints[4] = [start_coordinates[0] + radius, start_coordinates[1]]
         ### Changes all of the waypoints to be in a semicircle of given distance
+
+
     else:
         direct_gradient = (end_coordinates[1] - start_coordinates[1])/(end_coordinates[0] - start_coordinates[0])
         direct_distance = maths.sqrt(((end_coordinates[0] - start_coordinates[0])**2)+((end_coordinates[1] - start_coordinates[1])**2))
-        ### IN THE PROCESS OF COMPLETING THE REQUEST ON LINE 89, NEED TO CREATE ELLIPSE(MATHS)
+        center_of_semicircle = [((end_coordinates[0]-start_coordinates[0])/2)+start_coordinates[0],((end_coordinates[1]-start_coordinates[1])/2)+start_coordinates[1]]
+        waypoints[0] = start_coordinates
+        waypoints[1] = 
+        waypoints[4] = end_coordinates
+        ### This creates the normal curve semicircle based on the direct distance between points, can be returned and checked and stretched
+
+
+        if kwargs["stretch"] != 0:
+
+            # HERE STRETCH ALL WAYPOINTS FROM THE DIRECT DISTANCE LINE
         
 
 
@@ -99,7 +110,7 @@ def generate_route(**kwargs):
         print(radius,times_changed,kwargs["longer"])
         start_semicircle = [start_coordinates[0] - radius,start_coordinates[1]]
         end_semicircle = [start_coordinates[0] + radius, start_coordinates[1]]
-        generate_semicircle(start_semicircle,end_semicircle)
+        generate_semicircle()
     ### Makes a semicircular route with adjusted radius based on the "longer" key
     
 
@@ -107,6 +118,7 @@ def generate_route(**kwargs):
         # I WILL CHANGE THE GENERATE_SEMICIRCLE FUNCTION SO THAT HERE I CAN GENERATE A SEMICIRCLE WITH THE DIAMETER THE STRAIGHT LINE BETWEEN
         # START AND END POINTS, WHICH CAN BE ADJUSTED. I WILL CREATE A CONSTANT FOR THE CENTRE OF THE SEMICIRCLE, WHICH CAN BE USED EITHER
         # WHEN THE ROUTE RETURNS TO THE START OR IT REACHES A DIFFERENT FINAL DESTINATION
+        generate_semicircle(stretch = SOMETHING)
         nothing = 0
     
     waypoints_addresses = []
