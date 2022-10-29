@@ -9,6 +9,19 @@ API_KEY = str(open("key.txt","r").read())
 gmaps = googlemaps.Client(key=API_KEY)
 ### Receives the Google Maps Client to send requests to
 
+def rotate(coordinates):
+    """
+    Rotates points about center of the semicircle by taking away the distance to the origin rotating about the origin with a matrix transformation
+    This rotates by 90 degrees anticlockwise, and adds on the distance taken away at the end
+    """
+    x1 = (maths.cos(maths.pi/4)*(coordinates[0] - center_of_semicircle[0])) + (maths.sin(maths.pi/4)*(coordinates[1] - center_of_semicircle[1]))
+    y1 = -1*(maths.sin(maths.pi/4)*(coordinates[0] - center_of_semicircle[0])) + (maths.cos(maths.pi/4)*(coordinates[1] - center_of_semicircle[1]))
+    x1 = x1 + center_of_semicircle[0]
+    y1 = y1 + center_of_semicircle[1]
+    return [x1,y1]
+
+
+
 def route_output(results, distance, time):
     """
     Prints out the results of a directions request in a user friendly way
@@ -27,7 +40,6 @@ def route_output(results, distance, time):
         )
     print("total distance :",distance, "m" )
     print("total time :",time, "m" )
-
 
 
 def generate_semicircle(**kwargs):
@@ -50,21 +62,53 @@ def generate_semicircle(**kwargs):
     else:
         direct_gradient = (end_coordinates[1] - start_coordinates[1])/(end_coordinates[0] - start_coordinates[0])
         direct_distance = maths.sqrt(((end_coordinates[0] - start_coordinates[0])**2)+((end_coordinates[1] - start_coordinates[1])**2))
+        radius = direct_distance/2
+        global center_of_semicircle
         center_of_semicircle = [((end_coordinates[0]-start_coordinates[0])/2)+start_coordinates[0],((end_coordinates[1]-start_coordinates[1])/2)+start_coordinates[1]]
+        ### Finds the direct gradient and distance between start and end, and finds the centre of the semicircle
+
+        
         waypoints[0] = start_coordinates
-        waypoints[1] = 
+
+        waypoints[1] = rotate(waypoints[0])
+
+        waypoints[2] = rotate(waypoints[1])
+
+        waypoints[3] = rotate(waypoints[2])
+
         waypoints[4] = end_coordinates
         ### This creates the normal curve semicircle based on the direct distance between points, can be returned and checked and stretched
-
-
-        if kwargs["stretch"] != 0:
-
-            # HERE STRETCH ALL WAYPOINTS FROM THE DIRECT DISTANCE LINE
         
 
+        if kwargs["stretch"] != 0:
+            perpendicular_gradient = -1/direct_gradient
+            if start_coordinates[1] > end_coordinates[1]:
+                x_changer = 1
+            else:
+                x_changer = -1
+            if start_coordinates[0] > end_coordinates[0]:
+                y_changer = -1
+            else:
+                y_changer = 1
+            ### This creates the flags for if the program is to add or subtract a set value of x and y from the previous point, in order to stretch the
+            ### point from the direct line between start and end. This finds the direction to stretch (positive/negative x and y)
 
 
-
+            stretch = kwargs["stretch"]
+            print(waypoints, stretch,radius) ### ITS HERE, ITS HERE, ITS HERE, THIS IS WRONG, NEED TO RE-EVALUATE THIS IMMEDIATELY
+            ### plan:
+            ### convert gradient to radians with arctan and use that and the length of the line(stretch*radius) with trig to find x and y
+            # waypoints[1] = [waypoints[1][0] + x_changer * (stretch*radius),waypoints[1][1] + y_changer *(abs(perpendicular_gradient)*(waypoints[1][0] - (stretch*radius)))]
+            # waypoints[2] = [waypoints[2][0] + x_changer * (stretch*radius),waypoints[2][1] + y_changer *(abs(perpendicular_gradient)*(waypoints[2][0] - (stretch*radius)))]
+            # waypoints[3] = [waypoints[3][0] + x_changer * (stretch*radius),waypoints[3][1] + y_changer *(abs(perpendicular_gradient)*(waypoints[3][0] - (stretch*radius)))]
+            angle = maths.atan(abs(perpendicular_gradient))
+            waypoints[1] = [waypoints[1][0] + x_changer*(stretch-1)*radius*maths.cos(angle), waypoints[1][1] + y_changer*(stretch-1)*radius*maths.sin(angle)]
+            waypoints[2] = [waypoints[2][0] + x_changer*(stretch-1)*radius*maths.cos(angle), waypoints[2][1] + y_changer*(stretch-1)*radius*maths.sin(angle)]
+            waypoints[3] = [waypoints[3][0] + x_changer*(stretch-1)*radius*maths.cos(angle), waypoints[3][1] + y_changer*(stretch-1)*radius*maths.sin(angle)]
+            ### This stretches the points perpendicularly from the d rect line between start and end, all by the same amount
+            print(waypoints)
+        
+        
 def generate_route(**kwargs):
     """ 
     generates a route in the local area 
@@ -82,7 +126,6 @@ def generate_route(**kwargs):
     global radius
     if start_coordinates == end_coordinates:
         if times_changed == 0:
-            print(kwargs)
             if kwargs["distance"] != "":
                 radius = kwargs["distance"]/(maths.pi + 2.0)
             ### Finds the optimum radius of a semicircle route for the distance given
@@ -107,40 +150,43 @@ def generate_route(**kwargs):
                 radius *= 1.2
             else:
                 radius /= 1.3
-        print(radius,times_changed,kwargs["longer"])
-        start_semicircle = [start_coordinates[0] - radius,start_coordinates[1]]
-        end_semicircle = [start_coordinates[0] + radius, start_coordinates[1]]
         generate_semicircle()
     ### Makes a semicircular route with adjusted radius based on the "longer" key
     
 
     else:
-        # I WILL CHANGE THE GENERATE_SEMICIRCLE FUNCTION SO THAT HERE I CAN GENERATE A SEMICIRCLE WITH THE DIAMETER THE STRAIGHT LINE BETWEEN
-        # START AND END POINTS, WHICH CAN BE ADJUSTED. I WILL CREATE A CONSTANT FOR THE CENTRE OF THE SEMICIRCLE, WHICH CAN BE USED EITHER
-        # WHEN THE ROUTE RETURNS TO THE START OR IT REACHES A DIFFERENT FINAL DESTINATION
-        generate_semicircle(stretch = SOMETHING)
+        global stretcher
+        if times_changed != 0:
+            if kwargs["longer"]:
+                previous_stretch = stretcher
+                stretcher = previous_stretch * 1.2
+                generate_semicircle(stretch = stretcher)
+            else:
+                previous_stretch = stretcher
+                stretcher = previous_stretch / 1.3
+                generate_semicircle(stretch = stretcher)     
+        else:
+            stretcher = 1
+            generate_semicircle(stretch = 0)
         nothing = 0
     
+
     waypoints_addresses = []
     for waypoint in waypoints:
         waypoints_addresses.append(gmaps.reverse_geocode(latlng=(str(waypoint[0]) + "," + str(waypoint[1])))[0]["formatted_address"])
     ### Converts all waypoints into addresses for the directions to use
     
-    
-    
+
     results = gmaps.directions(origin = gmaps.geocode(kwargs["start_location"])[0]["formatted_address"], 
                                          destination = gmaps.geocode(kwargs["end_location"])[0]["formatted_address"],                
                                          waypoints = waypoints_addresses,
                                          mode = kwargs["travel_method"],
-                                         optimize_waypoints = True,
+                                         optimize_waypoints = False,
                                          departure_time=datetime.datetime.now())
     ### Takes the start and end location and the added waypoints and makes a route
 
 
     return results
-
-
-
 
 
 
@@ -161,20 +207,15 @@ travel_method = input("Would you like to travel by walking, bicycling, or runnin
 ### Takes the information about the route from the user
 
 
-route_complete = False 
-### Route is completely formed to the information given
-
-
-lngr = ""
-### Flag for if the route needs to be longer or shorter, later a boolean, empty string means no route calculated yet
-
+route_complete = False ### Route is completely formed to the information given
+lngr = "" ### Flag for if the route needs to be longer or shorter, later a boolean, empty string means no route calculated yet
 global start_coordinates, end_coordinates,average_coordinates,times_changed,waypoints,radius
 radius = 0.0
 waypoints = []
 times_changed = 0
 start_coordinates = gmaps.geocode(start_location)[0]["geometry"]["viewport"]["northeast"] ### Gets coordinates for start and end
 start_coordinates = [start_coordinates["lat"],start_coordinates["lng"]] ### Converts to a list [latitude,longitude]
-end_coordinates = gmaps.geocode(start_location)[0]["geometry"]["viewport"]["northeast"]
+end_coordinates = gmaps.geocode(end_location)[0]["geometry"]["viewport"]["northeast"]
 end_coordinates = [end_coordinates["lat"],end_coordinates["lng"]] ### Converts to a list [latitude,longitude]
 average_coordinates = [(start_coordinates[0] + end_coordinates[0]/2),
                         (start_coordinates[1] + end_coordinates[1]/2)] ### Calculates the middle point between start and end
@@ -203,7 +244,7 @@ else:
 while not route_complete:
     ### Generate different routes until one matches the information given
     
-    
+
     results = generate_route(start_location=start_location,
                             end_location=end_location,
                             distance=distance,
@@ -215,8 +256,7 @@ while not route_complete:
 
     times_changed += 1
     ### Iterates the flag for number of times the route has been made or changed by one(global)
-
-
+    # pprint(results) ### HERE PRODUCES AN EMPTY LIST FSR, IDK WHY, CHECK THIS OUT
     route_distance = 0 
     for leg in results[0]["legs"]: 
         leg_distance = leg["distance"]["text"]
