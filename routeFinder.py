@@ -9,6 +9,10 @@ API_KEY = str(open("key.txt","r").read())
 gmaps = googlemaps.Client(key=API_KEY)
 ### Receives the Google Maps Client to send requests to
 
+def distance_calculator(start,end):
+    return maths.sqrt(((end[0] - start[0])**2)+((end[1] - start[1])**2))
+
+
 def rotate(coordinates):
     """
     Rotates points about center of the semicircle by taking away the distance to the origin rotating about the origin with a matrix transformation
@@ -25,6 +29,10 @@ def rotate(coordinates):
 def route_output(results, distance, time):
     """
     Prints out the results of a directions request in a user friendly way
+    INPUT:
+            Route information, total distance of route, total time of route
+    OUTPUT:
+            Prints the route and points along the way, with leg times and distances
     """
     for i, leg in enumerate(results[0]["legs"]):
         print("Stop:" + str(i),
@@ -44,10 +52,15 @@ def route_output(results, distance, time):
 
 def generate_semicircle(**kwargs):
     """
-    Generates a semicicle or semi-ellipse of given radius at the start coordinates
-    INPUT: both vertices of the semicircle, or semi-ellipse
-    OUTPUT: waypoints(global variable)
+    Generates a semicicle or semi-ellipse of given radius at the start coordinates. Can stretch existing semi-circle or semi-ellipse to increase/
+    decrease distance
+    INPUT: 
+            Both vertices of the semicircle, or semi-ellipse as a global variable as well as the stretch factor to apply(in kwargs)
+    OUTPUT: 
+            Waypoints(global variable)
     """
+    global radius
+
     if start_coordinates == end_coordinates:
         waypoints[0] = [start_coordinates[0] - radius, start_coordinates[1]]
         waypoints[1] = [start_coordinates[0] - (maths.sin(45)*radius),
@@ -91,22 +104,22 @@ def generate_semicircle(**kwargs):
             else:
                 y_changer = 1
             ### This creates the flags for if the program is to add or subtract a set value of x and y from the previous point, in order to stretch the
-            ### point from the direct line between start and end. This finds the direction to stretch (positive/negative x and y)
+            ### point from the direct line between start and end. This finds the direction to stretch (positive/negative x and y).
+            ### Start position in terms of the points being input is the opposite(waypoints[5] is the start, as it goes anticlockwise in the rotation),
+            ### so thats why the values may appear to be switched around
 
 
             stretch = kwargs["stretch"]
-            print(waypoints, stretch,radius) ### ITS HERE, ITS HERE, ITS HERE, THIS IS WRONG, NEED TO RE-EVALUATE THIS IMMEDIATELY
-            ### plan:
-            ### convert gradient to radians with arctan and use that and the length of the line(stretch*radius) with trig to find x and y
-            # waypoints[1] = [waypoints[1][0] + x_changer * (stretch*radius),waypoints[1][1] + y_changer *(abs(perpendicular_gradient)*(waypoints[1][0] - (stretch*radius)))]
-            # waypoints[2] = [waypoints[2][0] + x_changer * (stretch*radius),waypoints[2][1] + y_changer *(abs(perpendicular_gradient)*(waypoints[2][0] - (stretch*radius)))]
-            # waypoints[3] = [waypoints[3][0] + x_changer * (stretch*radius),waypoints[3][1] + y_changer *(abs(perpendicular_gradient)*(waypoints[3][0] - (stretch*radius)))]
             angle = maths.atan(abs(perpendicular_gradient))
+            ### Unpacks the stretching factor and gets the absolute value of the angle of the line in radians
+
+
             waypoints[1] = [waypoints[1][0] + x_changer*(stretch-1)*radius*maths.cos(angle), waypoints[1][1] + y_changer*(stretch-1)*radius*maths.sin(angle)]
             waypoints[2] = [waypoints[2][0] + x_changer*(stretch-1)*radius*maths.cos(angle), waypoints[2][1] + y_changer*(stretch-1)*radius*maths.sin(angle)]
             waypoints[3] = [waypoints[3][0] + x_changer*(stretch-1)*radius*maths.cos(angle), waypoints[3][1] + y_changer*(stretch-1)*radius*maths.sin(angle)]
-            ### This stretches the points perpendicularly from the d rect line between start and end, all by the same amount
-            print(waypoints)
+            ### Adds to the existing point the proportional stretch from the direct distance line. x_changer makes it go in the right direction, stretch-1
+            ### is to get the added part of the stretch on top of the original, this is multiplied by the radius, to make it proportional to the circle,
+            ### and the angle is used to make it add in the right direction
         
         
 def generate_route(**kwargs):
@@ -188,35 +201,98 @@ def generate_route(**kwargs):
 
     return results
 
+global start_coordinates, end_coordinates,average_coordinates,times_changed,waypoints
+
+accept = False
+while not accept:
+    accept = True
+    start_location = input("Your Address ")
+    try:
+        start_coordinates = gmaps.geocode(start_location)[0]["geometry"]["viewport"]["northeast"] ### Gets coordinates for start and end
+    except: accept = False
+        
+accept = False
+while not accept:
+    accept = True
+    return_input = input("Would you like to return to here? ")    
+    if return_input == "yes":
+        end_location = start_location
+    elif return_input == "no": 
+        accept_ = False
+        while not accept_:
+            end_location = input("Ending Address ")
+            try:
+                end_coordinates = gmaps.geocode(end_location)[0]["geometry"]["viewport"]["northeast"] ### Gets coordinates for start and end
+                start_coordinates = [start_coordinates["lat"],start_coordinates["lng"]] ### Converts to a list [latitude,longitude]
+                end_coordinates = [end_coordinates["lat"],end_coordinates["lng"]] ### Converts to a list [latitude,longitude]
+                m_distance = distance_calculator(start_coordinates,end_coordinates) * 111139.0
+                print(m_distance)
+                if m_distance > 500000:
+                    print("too long")
+                    a = "A" + 4
+                accept_ = True
+            except: accept_ = False            
+    else: accept = False
+    
+accept = False
+while not accept:
+    travel_method = input("Would you like to travel by walking, bicycling, or running? ")
+    if travel_method == "walking" or travel_method == "bicycling" or travel_method == "running":
+        accept = True
+
+accept = False
+while not accept:
+    accept = True
+    time_distance = input("Would you like to find a route by time or distance? ")
+    if time_distance == "distance":
+        accept_ = False
+        while not accept_:
+            accept_ = True
+            distance = input("What distance would you like to travel in kilometers? ")### NO MORE THAN 1 DECIMAL PLACE: ADD INPUT VALIDATION FOR ALL INPUTS
+            try:
+                distance = float(distance)
+                distance *= 1000.0
+                distance = int(distance)
+                time = ""
+                if distance > m_distance*0.7:
+                    print("too short")
+                    a = "a" + 4
+            except: accept_ = False
+    elif time_distance == "time":
+        accept_ = False
+        while not accept_:
+            accept_ = True
+            time = input("How long would you like to travel for in minutes? ")
+            try:
+                time = int(time)
+                distance = ""
+                if travel_method == "walking":
+                    if time < (m_distance/84)*0.7:
+                        print("too short")
+                        a = "a" + 4
+                elif travel_method == "bicycling":
+                    if time < (m_distance/420)*0.7:
+                        print("too short")
+                        a = "a" + 4
+                elif travel_method == "running":
+                    if time < (m_distance/300)*0.7:
+                        print("too short")
+                        a = "a" + 4
+            except: accept_ = False
+    else:
+        accept = False
 
 
-start_location = input("Your Address")
-if input("Would you like to return to here?") == "yes":
-    end_location = start_location
-else: 
-    end_location = input("Ending Address")
-if input("Would you like to find a route by time or distance?") == "distance":
-    distance = float(input("What distance would you like to travel in kilometers?"))### NO MORE THAN 1 DECIMAL PLACE: ADD INPUT VALIDATION FOR ALL INPUTS
-    distance *= 1000.0
-    distance = int(distance)
-    time = ""
-else:
-    time = int(input("How long would you like to travel for in minutes?"))
-    distance = ""
-travel_method = input("Would you like to travel by walking, bicycling, or running?")
 ### Takes the information about the route from the user
 
 
 route_complete = False ### Route is completely formed to the information given
 lngr = "" ### Flag for if the route needs to be longer or shorter, later a boolean, empty string means no route calculated yet
-global start_coordinates, end_coordinates,average_coordinates,times_changed,waypoints,radius
+
 radius = 0.0
 waypoints = []
 times_changed = 0
-start_coordinates = gmaps.geocode(start_location)[0]["geometry"]["viewport"]["northeast"] ### Gets coordinates for start and end
-start_coordinates = [start_coordinates["lat"],start_coordinates["lng"]] ### Converts to a list [latitude,longitude]
-end_coordinates = gmaps.geocode(end_location)[0]["geometry"]["viewport"]["northeast"]
-end_coordinates = [end_coordinates["lat"],end_coordinates["lng"]] ### Converts to a list [latitude,longitude]
+
 average_coordinates = [(start_coordinates[0] + end_coordinates[0]/2),
                         (start_coordinates[1] + end_coordinates[1]/2)] ### Calculates the middle point between start and end
 ### average_coordinates creates a centre to work from. If the route needs to be longer, the waypoints are moved away from the centre. If it needs
