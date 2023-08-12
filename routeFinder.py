@@ -40,14 +40,12 @@ def route_output(results, distance, time):
             "==> ",
             leg["end_address"], 
             "distance: ", 
-            leg["distance"]["value"],
-            "m", 
-            "traveling Time: ",
-            leg["duration"]["value"],
-            "s"
+            str(leg["distance"]["value"]) + "m", 
+            "traveling Time:",
+            str(leg["duration"]["value"][:-1]) + "s"
         )
-    print("total distance :",distance, "m" )
-    print("total time :",time, "m" )
+    print("total distance:",str(distance) + "m" )
+    print("total time:",str(time) + "mins" )
 
 
 def generate_semicircle(**kwargs):
@@ -207,9 +205,11 @@ accept = False
 while not accept:
     accept = True
     start_location = input("Your Address ")
-    try:
-        start_coordinates = gmaps.geocode(start_location)[0]["geometry"]["viewport"]["northeast"] ### Gets coordinates for start and end
-    except: accept = False
+    start_coordinates = gmaps.geocode(start_location)
+    if start_coordinates ==  []: 
+        print("Invalid Address")
+        accept = False
+    else: start_coordinates = start_coordinates[0]["geometry"]["viewport"]["northeast"] ### Gets coordinates for start and end
         
 accept = False
 while not accept:
@@ -229,7 +229,7 @@ while not accept:
                 print(m_distance)
                 if m_distance > 500000:
                     print("too long")
-                    a = "A" + 4
+                    accept_ = False
                 accept_ = True
             except: accept_ = False            
     else: accept = False
@@ -254,9 +254,9 @@ while not accept:
                 distance *= 1000.0
                 distance = int(distance)
                 time = ""
-                if distance > m_distance*0.7:
+                if m_distance > distance*0.7:
                     print("too short")
-                    a = "a" + 4
+                    accept_ = False
             except: accept_ = False
     elif time_distance == "time":
         accept_ = False
