@@ -6,4 +6,4 @@ Download routeFinder.py and create a .txt file named "key.txt" in the same folde
 
 This program creates a walking, running or cycling route in your area.
 It uses googlemaps library in python: (https://github.com/googlemaps/google-maps-services-python).
-I plan to run this and display the result on a webpage using an embedded google map, but I am not competent enough in JavaScript to write the whole program on it.
+I plan to run this and display the result on a webpage using an embedded google map at some point.
