@@ -20,36 +20,37 @@
       function initMap() {
         var options = {
           zoom: 8,
-          center: { lat: 55.53, lng: 9.4 },
+          center: { lat: 51.51984798019271, lng: -1.658301414333887 },
         };
         var map = new google.maps.Map(document.getElementById("map"), options);
         const geocoder = new google.maps.Geocoder();
 
         // build request
-        const origin1 = new google.maps.LatLng(55.93, -3.118);
-        const destinationB = new google.maps.LatLng(51.5072, 0.1276);
+        const origin1 = new google.maps.LatLng(
+          51.281722561210664,
+          -0.5951942487505887
+        );
+        const destinationB = new google.maps.LatLng(
+          54.49715831001841,
+          -1.485266764757544
+        );
         let directionsService = new google.maps.DirectionsService();
         let directionsRenderer = new google.maps.DirectionsRenderer();
         directionsRenderer.setMap(map); // Existing map object displays directions
-        // Create route from existing points used for markers
-        const directions = [
-          { location: new google.maps.LatLng(51.4545, 2.5879), stopover: true },
-          { location: new google.maps.LatLng(48.856, 2.3522), stopover: true },
-          { location: new google.maps.LatLng(52.52, 13.405), stopover: true },
-        ];
+
         var waypts = [];
 
-        stop = new google.maps.LatLng(53.8007554, -1.5490774);
+        stop = new google.maps.LatLng(51.51984798019271, -1.658301414333887);
         waypts.push({
           location: stop,
           stopover: true,
         });
-        stop = new google.maps.LatLng(51.454513, -2.58791);
+        stop = new google.maps.LatLng(52.510366064617386, -1.2627936214524533);
         waypts.push({
           location: stop,
           stopover: true,
         });
-        stop = new google.maps.LatLng(50.9105468, -1.4049018);
+        stop = new google.maps.LatLng(53.446348786586, -0.5102301762251635);
         waypts.push({
           location: stop,
           stopover: true,
@@ -89,7 +90,8 @@
     <script
       async
       defer
-      src="https://maps.googleapis.com/maps/api/js?key=XXXXXXXXXXXXXXXXX&callback=initMap&v=weekly"
+      id="map"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrCSVjt5zIF0iQ46BaPKTRWs4pbQjGQwo&callback=initMap&v=weekly"
     ></script>
   </body>
 </html>
