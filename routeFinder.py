@@ -42,7 +42,7 @@ def route_output(results, distance, time):
             "distance: ", 
             str(leg["distance"]["value"]) + "m", 
             "traveling Time:",
-            str(leg["duration"]["value"][:-1]) + "s"
+            str(leg["duration"]["value"])[:-1] + "s"
         )
     print("total distance:",str(distance) + "m" )
     print("total time:",str(time) + "mins" )
@@ -197,191 +197,183 @@ def generate_route(**kwargs):
     ### Takes the start and end location and the added waypoints and makes a route
 
 
-    return results
+    return results,waypoints_addresses
 
-global start_coordinates, end_coordinates,average_coordinates,times_changed,waypoints
+def main():
+    global start_coordinates, end_coordinates,average_coordinates,times_changed,waypoints
 
-accept = False
-while not accept:
-    accept = True
-    start_location = input("Your Address ")
-    start_coordinates = gmaps.geocode(start_location)
-    if start_coordinates ==  []: 
-        print("Invalid Address")
-        accept = False
-    else: start_coordinates = start_coordinates[0]["geometry"]["viewport"]["northeast"] ### Gets coordinates for start and end
-        
-accept = False
-while not accept:
-    accept = True
-    return_input = input("Would you like to return to here? ")    
-    if return_input == "yes":
-        end_location = start_location
-    elif return_input == "no": 
-        accept_ = False
-        while not accept_:
-            end_location = input("Ending Address ")
-            try:
-                end_coordinates = gmaps.geocode(end_location)[0]["geometry"]["viewport"]["northeast"] ### Gets coordinates for start and end
-                start_coordinates = [start_coordinates["lat"],start_coordinates["lng"]] ### Converts to a list [latitude,longitude]
-                end_coordinates = [end_coordinates["lat"],end_coordinates["lng"]] ### Converts to a list [latitude,longitude]
-                m_distance = distance_calculator(start_coordinates,end_coordinates) * 111139.0
-                print(m_distance)
-                if m_distance > 500000:
-                    print("too long")
-                    accept_ = False
-                accept_ = True
-            except: accept_ = False            
-    else: accept = False
-    
-accept = False
-while not accept:
-    travel_method = input("Would you like to travel by walking, bicycling, or running? ")
-    if travel_method == "walking" or travel_method == "bicycling" or travel_method == "running":
+    accept = False
+    while not accept:
         accept = True
+        start_location = input("Your Address ")
+        start_coordinates = gmaps.geocode(start_location)
+        if start_coordinates ==  []: 
+            print("Invalid Address")
+            accept = False
+        else: start_coordinates = start_coordinates[0]["geometry"]["viewport"]["northeast"] ### Gets coordinates for start and end
+            
+    accept = False
+    while not accept:
+        accept = True
+        return_input = input("Would you like to return to here? ")    
+        if return_input == "yes":
+            end_location = start_location
+            end_coordinates = start_coordinates
+        elif return_input == "no": 
+            accept_ = False
+            while not accept_:
+                end_location = input("Ending Address ")
+                try:
+                    end_coordinates = gmaps.geocode(end_location)[0]["geometry"]["viewport"]["northeast"] ### Gets coordinates for start and end
+                    m_distance = distance_calculator(start_coordinates,end_coordinates) * 111139.0
+                    print(m_distance)
+                    if m_distance > 500000:
+                        print("too long")
+                        accept_ = False
+                    accept_ = True
+                except: accept_ = False            
+        else: accept = False
+        
+    start_coordinates = [start_coordinates["lat"],start_coordinates["lng"]] ### Converts to a list [latitude,longitude]
+    end_coordinates = [end_coordinates["lat"],end_coordinates["lng"]] ### Converts to a list [latitude,longitude]
+    accept = False
+    while not accept:
+        travel_method = input("Would you like to travel by walking, bicycling, or running? ")
+        if travel_method == "walking" or travel_method == "bicycling" or travel_method == "running":
+            accept = True
 
-accept = False
-while not accept:
-    accept = True
-    time_distance = input("Would you like to find a route by time or distance? ")
-    if time_distance == "distance":
-        accept_ = False
-        while not accept_:
-            accept_ = True
-            distance = input("What distance would you like to travel in kilometers? ")### NO MORE THAN 1 DECIMAL PLACE: ADD INPUT VALIDATION FOR ALL INPUTS
-            try:
-                distance = float(distance)
-                distance *= 1000.0
-                distance = int(distance)
-                time = ""
-                if m_distance > distance*0.7:
-                    print("too short")
-                    accept_ = False
-            except: accept_ = False
-    elif time_distance == "time":
-        accept_ = False
-        while not accept_:
-            accept_ = True
-            time = input("How long would you like to travel for in minutes? ")
-            try:
-                time = int(time)
-                distance = ""
-                if travel_method == "walking":
-                    if time < (m_distance/84)*0.7:
-                        print("too short")
-                        a = "a" + 4
-                elif travel_method == "bicycling":
-                    if time < (m_distance/420)*0.7:
-                        print("too short")
-                        a = "a" + 4
-                elif travel_method == "running":
-                    if time < (m_distance/300)*0.7:
-                        print("too short")
-                        a = "a" + 4
-            except: accept_ = False
-    else:
-        accept = False
-
-
-### Takes the information about the route from the user
-
-
-route_complete = False ### Route is completely formed to the information given
-lngr = "" ### Flag for if the route needs to be longer or shorter, later a boolean, empty string means no route calculated yet
-
-radius = 0.0
-waypoints = []
-times_changed = 0
-
-average_coordinates = [(start_coordinates[0] + end_coordinates[0]/2),
-                        (start_coordinates[1] + end_coordinates[1]/2)] ### Calculates the middle point between start and end
-### average_coordinates creates a centre to work from. If the route needs to be longer, the waypoints are moved away from the centre. If it needs
-### to be shorter, they are moved towards the centre
-
-
-if end_location == start_location:
-    for x in range(5):
-        waypoints.append(start_coordinates) 
-### Adds 5 waypoints at the start/end point to be changed later
-
-
-else:
-    waypoints.append(start_coordinates)
-    waypoints.append([(start_coordinates[0] + average_coordinates[0]/2),
-                        (start_coordinates[1] + average_coordinates[1]/2)])
-    waypoints.append(average_coordinates)
-    waypoints.append([(average_coordinates[0] + end_coordinates[0]/2),
-                        (average_coordinates[1] + end_coordinates[1]/2)])
-    waypoints.append(end_coordinates)
-    ### Adds 5 waypoints between start and end to be changed later, if the start point is not the same as the end point
-      
-
-
-while not route_complete:
-    ### Generate different routes until one matches the information given
-    
-
-    results = generate_route(start_location=start_location,
-                            end_location=end_location,
-                            distance=distance,
-                            time=time,
-                            travel_method=travel_method,
-                            longer=lngr)
-    ### Uses the function to generate a route with waypoints
-
-
-    times_changed += 1
-    ### Iterates the flag for number of times the route has been made or changed by one(global)
-    # pprint(results) ### HERE PRODUCES AN EMPTY LIST FSR, IDK WHY, CHECK THIS OUT
-    route_distance = 0 
-    for leg in results[0]["legs"]: 
-        leg_distance = leg["distance"]["text"]
-        if "km" in leg_distance:
-            leg_distance = float(leg_distance[:-2])*1000
+    accept = False
+    while not accept:
+        accept = True
+        time_distance = input("Would you like to find a route by time or distance? ")
+        if time_distance == "distance":
+            accept_ = False
+            while not accept_:
+                accept_ = True
+                distance = input("What distance would you like to travel in kilometers? ")### NO MORE THAN 1 DECIMAL PLACE: ADD INPUT VALIDATION FOR ALL INPUTS
+                try:
+                    distance = float(distance)
+                    distance *= 1000.0
+                    distance = int(distance)
+                    time = ""
+                    if return_input == "no":
+                        if m_distance > distance*0.7:
+                            print("too short")
+                            accept_ = False
+                except: accept_ = False
+        elif time_distance == "time":
+            accept_ = False
+            while not accept_:
+                accept_ = True
+                time = input("How long would you like to travel for in minutes? ")
+                try:
+                    time = int(time)
+                    distance = ""
+                    if travel_method == "walking":
+                        if time < (m_distance/84)*0.7:
+                            print("too short")
+                            a = "a" + 4
+                    elif travel_method == "bicycling":
+                        if time < (m_distance/420)*0.7:
+                            print("too short")
+                            a = "a" + 4
+                    elif travel_method == "running":
+                        if time < (m_distance/300)*0.7:
+                            print("too short")
+                            a = "a" + 4
+                except: accept_ = False
         else:
-            leg_distance = float(leg_distance[:-1])*1000
-        route_distance += leg_distance
-    route_distance = int(route_distance)
-    print(route_distance,"m")
-    ### Calculates the distance of the returned route
+            accept = False
 
 
-    route_time = 0 
-    for leg in results[0]["legs"]: 
-        leg_time = leg["duration"]["text"]
-        leg_time = int(leg_time[:-4])
-        route_time += leg_time
-    route_time = int(route_time)
-    print(route_time,"mins")
-    ### Calculates the time of the returned route
+    ### Takes the information about the route from the user
 
 
-    if distance != "":
-        if route_distance == distance:
-            route_output(results, route_distance, route_time)
-            break
-        elif route_distance < distance:
-            lngr = True
-        else:
-            lngr = False
-    ### If user input distance, checks if the route needs to be longer or shorter
-    
+    route_complete = False ### Route is completely formed to the information given
+    lngr = "" ### Flag for if the route needs to be longer or shorter, later a boolean, empty string means no route calculated yet
+
+    radius = 0.0
+    waypoints = []
+    times_changed = 0
+
+    if end_location == start_location:
+        for x in range(5):
+            waypoints.append(start_coordinates) 
+    ### Adds 5 waypoints at the start/end point to be changed later
 
 
     else:
-        if route_time == time:
-            route_output(results, route_distance, route_time)
-            break
-        elif route_time < time:
-            lngr = True
+        average_coordinates = [(start_coordinates[0] + end_coordinates[0])/2,
+                                (start_coordinates[1] + end_coordinates[1])/2] ### Calculates the middle point between start and end
+        ### average_coordinates creates a centre to work from. If the route needs to be longer, the waypoints are moved away from the centre. If it needs
+        ### to be shorter, they are moved towards the centre
+        waypoints.append(start_coordinates)
+        waypoints.append([(start_coordinates[0] + average_coordinates[0]/2),
+                            (start_coordinates[1] + average_coordinates[1]/2)])
+        waypoints.append(average_coordinates)
+        waypoints.append([(average_coordinates[0] + end_coordinates[0]/2),
+                            (average_coordinates[1] + end_coordinates[1]/2)])
+        waypoints.append(end_coordinates)
+        ### Adds 5 waypoints between start and end to be changed later, if the start point is not the same as the end point
+        
+
+
+    while not route_complete:
+        ### Generate different routes until one matches the information given
+        
+
+        results, returned_waypoints = generate_route(start_location=start_location,
+                                end_location=end_location,
+                                distance=distance,
+                                time=time,
+                                travel_method=travel_method,
+                                longer=lngr)
+        ### Uses the function to generate a route with waypoints
+
+        times_changed += 1
+        ### Iterates the flag for number of times the route has been made or changed by one(global)
+        # pprint(results) ### HERE PRODUCES AN EMPTY LIST FSR, IDK WHY, CHECK THIS OUT
+        route_distance = 0 
+        for leg in results[0]["legs"]: 
+            leg_distance = leg["distance"]["text"]
+            if "km" in leg_distance:
+                leg_distance = float(leg_distance[:-2])*1000
+            else:
+                leg_distance = float(leg_distance[:-1])*1000
+            route_distance += leg_distance
+        route_distance = int(route_distance)
+        print(route_distance,"m")
+        ### Calculates the distance of the returned route
+
+
+        route_time = 0 
+        for leg in results[0]["legs"]: 
+            leg_time = leg["duration"]["text"]
+            leg_time = int(leg_time[:-4])
+            route_time += leg_time
+        route_time = int(route_time)
+        print(route_time,"mins")
+        ### Calculates the time of the returned route
+
+        if distance != "":
+            if route_distance == distance:
+                route_output(results, route_distance, route_time)
+                route_complete = True
+            elif route_distance < distance:
+                lngr = True
+            else:
+                lngr = False
+        ### If user input distance, checks if the route needs to be longer or shorter
+        
+
+
         else:
-            lngr = False
-    ### If user input time, checks if the route needs to be longer or shorter
-
-
-
-
-
-
-
-
+            if route_time == time:
+                route_output(results, route_distance, route_time)
+                route_complete = True
+            elif route_time < time:
+                lngr = True
+            else:
+                lngr = False
+        ### If user input time, checks if the route needs to be longer or shorter
+    return returned_waypoints
