@@ -4,13 +4,14 @@ import googlemaps
 import datetime
 import math as maths
 from pprint import pprint
+import os
 
-API_KEY = str(open("key.txt","r").read())
+API_KEY = str(open(os.path.dirname(os.path.realpath(__file__)) + '\\key.txt', "r").readline())
 gmaps = googlemaps.Client(key=API_KEY)
 ### Receives the Google Maps Client to send requests to
 
 def distance_calculator(start,end):
-    return maths.sqrt(((end[0] - start[0])**2)+((end[1] - start[1])**2))
+    return maths.sqrt(((end['lat'] - start['lat'])**2)+((end['lng'] - start['lng'])**2))
 
 
 def rotate(coordinates):
@@ -199,7 +200,7 @@ def generate_route(**kwargs):
 
     return results,waypoints_addresses
 
-def main():
+def route_main():
     global start_coordinates, end_coordinates,average_coordinates,times_changed,waypoints
 
     accept = False

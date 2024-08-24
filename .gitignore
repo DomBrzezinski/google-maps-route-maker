@@ -3,3 +3,5 @@
 *.js
 Tests/
 __pycache__/
+env/routefinder/route/key.txt
+env/routefinder/route/programs/key.txt
