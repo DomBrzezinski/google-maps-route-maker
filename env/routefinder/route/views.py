@@ -9,7 +9,7 @@ def getRoute(request):
     with open(os.path.dirname(os.path.realpath(__file__)) + '\\key.txt', "r") as key_file:
         key_file.readline()
         website_key = key_file.readline()
-    waypoints = router.route_main()
+    waypoints = router.route_main()[1]
     context = {
         'website_key': website_key,
         'waypoints': waypoints
