@@ -3,7 +3,7 @@ import socketio
 import eventlet
 # import routeFinder
 
-app = Flask(__name__)
+# app = Flask(__name__)
 
 # results = str(routeFinder.main())
 # print(results)
