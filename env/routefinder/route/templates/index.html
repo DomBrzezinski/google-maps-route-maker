@@ -22,7 +22,7 @@
     </ul>
     <div id="map"></div>
     <script>
-      var waypoints = "{{waypoints}}";
+      var waypoints = {{waypoints}};
       function initMap() {
         var options = {
           zoom: 8,
@@ -65,7 +65,7 @@
         const route = {
           origin: origin1,
           destination: destinationB,
-          travelMode: google.maps.DirectionsTravelMode.DRIVING,
+          travelMode: google.maps.DirectionsTravelMode.WALKING,
           waypoints: waypts,
           optimizeWaypoints: true,
         };
