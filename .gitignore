@@ -6,8 +6,9 @@ env/Lib/site-packages/
 env/Lib/
 Tests/
 __pycache__/
-env/routefinder/route/key.txt
-env/routefinder/route/programs/key.txt
+env/routeFinder/route/key.txt
+env/routeFinder/route/programs/key.txt
 env/Scripts/
 env/Include/
 git-filter-repo.py
+env/routeFinder/route/coordinates.py

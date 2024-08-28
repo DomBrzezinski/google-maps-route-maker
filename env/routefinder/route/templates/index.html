@@ -22,6 +22,7 @@
     </ul>
     <div id="map"></div>
     <script>
+      var waypoints = "{{waypoints}}";
       function initMap() {
         var options = {
           zoom: 8,
@@ -32,12 +33,12 @@
 
         // build request
         const origin1 = new google.maps.LatLng(
-          51.281722561210664,
-          -0.5951942487505887
+          waypoints[0][0],
+          waypoints[0][1]
         );
         const destinationB = new google.maps.LatLng(
-          54.49715831001841,
-          -1.485266764757544
+          waypoints[4][0],
+          waypoints[4][1]
         );
         let directionsService = new google.maps.DirectionsService();
         let directionsRenderer = new google.maps.DirectionsRenderer();
@@ -45,17 +46,17 @@
 
         var waypts = [];
 
-        stop = new google.maps.LatLng(51.51984798019271, -1.658301414333887);
+        stop = new google.maps.LatLng(waypoints[1][0], waypoints[1][1]);
         waypts.push({
           location: stop,
           stopover: true,
         });
-        stop = new google.maps.LatLng(52.510366064617386, -1.2627936214524533);
+        stop = new google.maps.LatLng(waypoints[2][0], waypoints[2][1]);
         waypts.push({
           location: stop,
           stopover: true,
         });
-        stop = new google.maps.LatLng(53.446348786586, -0.5102301762251635);
+        stop = new google.maps.LatLng(waypoints[3][0], waypoints[3][1]);
         waypts.push({
           location: stop,
           stopover: true,
