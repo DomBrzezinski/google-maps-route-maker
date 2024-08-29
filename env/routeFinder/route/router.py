@@ -377,4 +377,4 @@ def route_main():
             else:
                 lngr = False
         ### If user input time, checks if the route needs to be longer or shorter
-    return returned_waypoints, waypoints
+    return [returned_waypoints, waypoints, travel_method]

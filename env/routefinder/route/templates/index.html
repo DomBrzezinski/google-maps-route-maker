@@ -15,11 +15,6 @@
   <body>
     <h1 id="msg"></h1>
     <h1 id="response"></h1>
-    <ul>
-      {% for x in waypoints %}
-      <li>{{x}}</li>
-      {% endfor %}
-    </ul>
     <div id="map"></div>
     <script>
       var waypoints = {{waypoints}};
@@ -65,7 +60,7 @@
         const route = {
           origin: origin1,
           destination: destinationB,
-          travelMode: google.maps.DirectionsTravelMode.WALKING,
+          travelMode: google.maps.DirectionsTravelMode.{{travel_method}},
           waypoints: waypts,
           optimizeWaypoints: true,
         };
@@ -83,7 +78,7 @@
               return;
             } else {
               document.getElementById("msg").innerHTML +=
-                " Driving distance is " +
+                "{{travel_method.lower()}} Distance is " +
                 directionsData.distance.text +
                 " (" +
                 directionsData.duration.text +
