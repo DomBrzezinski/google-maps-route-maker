@@ -10,9 +10,40 @@
         height: 400px;
         width: 100%;
       }
+      .inputs {
+        font-family: Courier New;
+      }
     </style>
   </head>
   <body>
+    <form id="form1" class="inputs">
+      <input id="starting_loctation" type="text" />
+      <label for="starting_loctation">Starting Location</label><br />
+
+      <input
+        id="return_original"
+        type="checkbox"
+        onchange="return_original()"
+      />
+      <label for="return_original">Return back here?</label><br />
+    </form>
+    <form id="form2" class="inputs">
+      <input id="ending_location" type="text" />
+      <label for="ending_location_loctation">Ending Location</label><br />
+
+      <p>Travel Method:</p>
+      <input type="radio" id="Walking" name="travel_method" value="Walking" />
+      <label for="Walking">Walking</label><br />
+      <input type="radio" id="Running" name="travel_method" value="Running" />
+      <label for="Running">Running</label><br />
+      <input
+        type="radio"
+        id="Bicycling"
+        name="travel_method"
+        value="Bicycling"
+      />
+      <label for="Bicycling">Bicycling</label>
+    </form>
     <h1 id="msg"></h1>
     <h1 id="response"></h1>
     <div id="map"></div>
@@ -86,6 +117,9 @@
             }
           }
         });
+      }
+      function return_original() {
+
       }
     </script>
     <script
