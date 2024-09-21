@@ -15,16 +15,12 @@
       }
     </style>
   </head>
-  <body>
+  <body onload="format_inputs()">
     <form id="form1" class="inputs">
       <input id="starting_loctation" type="text" />
       <label for="starting_loctation">Starting Location</label><br />
 
-      <input
-        id="return_original"
-        type="checkbox"
-        onchange="return_original()"
-      />
+      <input id="return_original" type="checkbox" onchange="loop()" />
       <label for="return_original">Return back here?</label><br />
     </form>
     <form id="form2" class="inputs">
@@ -59,6 +55,7 @@
         id="Distance"
         name="time_or_distance"
         value="Distance"
+        onchange="t_or_d()"
       />
       <label for="Distance">Distance</label>
     </form>
@@ -74,79 +71,7 @@
     <h1 id="response"></h1>
     <div id="map"></div>
     <script>
-      var waypoints = {{waypoints}};
-      function initMap() {
-        var options = {
-          zoom: 8,
-          center: { lat: 51.51984798019271, lng: -1.658301414333887 },
-        };
-        var map = new google.maps.Map(document.getElementById("map"), options);
-        const geocoder = new google.maps.Geocoder();
-
-        // build request
-        const origin1 = new google.maps.LatLng(
-          waypoints[0][0],
-          waypoints[0][1]
-        );
-        const destinationB = new google.maps.LatLng(
-          waypoints[4][0],
-          waypoints[4][1]
-        );
-        let directionsService = new google.maps.DirectionsService();
-        let directionsRenderer = new google.maps.DirectionsRenderer();
-        directionsRenderer.setMap(map); // Existing map object displays directions
-
-        var waypts = [];
-
-        stop = new google.maps.LatLng(waypoints[1][0], waypoints[1][1]);
-        waypts.push({
-          location: stop,
-          stopover: true,
-        });
-        stop = new google.maps.LatLng(waypoints[2][0], waypoints[2][1]);
-        waypts.push({
-          location: stop,
-          stopover: true,
-        });
-        stop = new google.maps.LatLng(waypoints[3][0], waypoints[3][1]);
-        waypts.push({
-          location: stop,
-          stopover: true,
-        });
-
-        const route = {
-          origin: origin1,
-          destination: destinationB,
-          travelMode: google.maps.DirectionsTravelMode.{{travel_method}},
-          waypoints: waypts,
-          optimizeWaypoints: true,
-        };
-
-        directionsService.route(route, function (response, status) {
-          // anonymous function to capture directions
-          if (status !== "OK") {
-            window.alert("Directions request failed due to " + status);
-            return;
-          } else {
-            directionsRenderer.setDirections(response); // Add route to the map
-            var directionsData = response.routes[0].legs[0]; // Get data about the mapped route
-            if (!directionsData) {
-              window.alert("Directions request failed");
-              return;
-            } else {
-              document.getElementById("msg").innerHTML +=
-                "{{travel_method.lower()}} Distance is " +
-                directionsData.distance.text +
-                " (" +
-                directionsData.duration.text +
-                ").";
-            }
-          }
-        });
-      }
-    </script>
-    <script>
-      function return_original() {
+      function loop() {
         var checkbox = document.getElementById("return_original");
         var end_loc_form = document.getElementById("form2");
         if (checkbox.checked) {
@@ -157,7 +82,7 @@
       }
       function t_or_d() {
         var time_box = document.getElementById("Time");
-        var timeform = document.getElementById("timeforme");
+        var timeform = document.getElementById("timeform");
         var distanceform = document.getElementById("distanceform");
         if (time_box.checked) {
           timeform.style.display = "block";
@@ -167,12 +92,12 @@
           distanceform.style.display = "block";
         }
       }
+      function format_inputs() {
+        var timeform = document.getElementById("timeform");
+        var distanceform = document.getElementById("distanceform");
+        distanceform.style.display = "none";
+        timeform.style.display = "none";
+      }
     </script>
-    <script
-      async
-      defer
-      id="map"
-      src="https://maps.googleapis.com/maps/api/js?key={{website_key}}&callback=initMap&v=weekly"
-    ></script>
   </body>
 </html>
