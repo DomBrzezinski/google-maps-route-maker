@@ -30,7 +30,8 @@
     <form id="form2" class="inputs">
       <input id="ending_location" type="text" />
       <label for="ending_location_loctation">Ending Location</label><br />
-
+    </form>
+    <form id="form3" class="inputs">
       <p>Travel Method:</p>
       <input type="radio" id="Walking" name="travel_method" value="Walking" />
       <label for="Walking">Walking</label><br />
@@ -43,6 +44,31 @@
         value="Bicycling"
       />
       <label for="Bicycling">Bicycling</label>
+
+      <p>Would you like to define route in terms of time or distance?</p>
+      <input
+        type="radio"
+        id="Time"
+        name="time_or_distance"
+        value="Time"
+        onchange="t_or_d()"
+      />
+      <label for="Time">Time</label><br />
+      <input
+        type="radio"
+        id="Distance"
+        name="time_or_distance"
+        value="Distance"
+      />
+      <label for="Distance">Distance</label>
+    </form>
+    <form id="timeform" class="inputs">
+      <input id="time_input" type="number" />
+      <label for="time_input"> Enter time in minutes </label>
+    </form>
+    <form id="distanceform" class="inputs">
+      <input id="distance_input" type="number" />
+      <label for="distance_input"> Enter distance in kilometres </label>
     </form>
     <h1 id="msg"></h1>
     <h1 id="response"></h1>
@@ -119,7 +145,26 @@
         });
       }
       function return_original() {
+        var checkbox = document.getElementById("return_original");
+        var end_loc_form = document.getElementById("form2")
+        if (checkbox.checked) {
+          end_loc_form.style.display = "none";
+        } else {
+          end_loc_form.style.display = "block";
+        }
 
+      }
+      function t_or_d() {
+        var time_box = document.getElementById("Time")
+        var timeform = document.getElementById("timeforme")
+        var distanceform = document.getElementById("distanceform")
+        if (time_box.checked) {
+          timeform.style.display = "block"
+          distanceform.style.display = "none"
+        } else {
+          timeform.style.display = "none"
+          distanceform.style.display = "block"
+        }
       }
     </script>
     <script
