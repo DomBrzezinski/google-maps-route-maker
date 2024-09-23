@@ -20,3 +20,9 @@ def getRoute(request):
         'travel_method': travel_method
     }
     return HttpResponse(template.render(context, request))
+
+
+def inputs(request):
+    template = loader.get_template('no_map.html')
+    context = {}
+    return HttpResponse(template.render(context, request))
