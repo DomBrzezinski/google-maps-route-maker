@@ -16,18 +16,18 @@
     </style>
   </head>
   <body onload="format_inputs()">
-    <form id="form1" class="inputs">
+    <form id="form1" class="inputs" action="/route/" method="post">
       <input id="starting_loctation" type="text" />
       <label for="starting_loctation">Starting Location</label><br />
 
       <input id="return_original" type="checkbox" onchange="loop()" />
       <label for="return_original">Return back here?</label><br />
     </form>
-    <form id="form2" class="inputs">
+    <form id="form2" class="inputs" action="/route/" method="post">
       <input id="ending_location" type="text" />
       <label for="ending_location_loctation">Ending Location</label><br />
     </form>
-    <form id="form3" class="inputs">
+    <form id="form3" class="inputs" action="/route/" method="post">
       <p>Travel Method:</p>
       <input type="radio" id="Walking" name="travel_method" value="Walking" />
       <label for="Walking">Walking</label><br />
@@ -59,13 +59,15 @@
       />
       <label for="Distance">Distance</label>
     </form>
-    <form id="timeform" class="inputs">
+    <form id="timeform" class="inputs" action="/route/" method="post">
       <input id="time_input" type="number" />
       <label for="time_input"> Enter time in minutes </label>
     </form>
-    <form id="distanceform" class="inputs">
+    <form id="distanceform" class="inputs" action="/route/" method="post">
       <input id="distance_input" type="number" />
       <label for="distance_input"> Enter distance in kilometres </label>
+      {% csrf_token %} {{form}}
+      <input type="submit" value="Submit" />
     </form>
     <script>
       function loop() {

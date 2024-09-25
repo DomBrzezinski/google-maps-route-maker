@@ -2,10 +2,19 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
 from . import router
+from .forms import dataForm
 import os
 
 def getRoute(request):
-    template = loader.get_template('index.html')
+
+    if request.method == "POST":
+        form = dataForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+    else:
+        form = dataForm()
+
+    
     with open(os.path.dirname(os.path.realpath(__file__)) + '\\key.txt', "r") as key_file:
         key_file.readline()
         website_key = key_file.readline()
@@ -17,12 +26,15 @@ def getRoute(request):
     context = {
         'website_key': website_key,
         'waypoints': waypoints,
-        'travel_method': travel_method
+        'travel_method': travel_method,
+        'form': form
     }
+    template = loader.get_template('index.html')
     return HttpResponse(template.render(context, request))
 
 
 def inputs(request):
+    form = dataForm()
     template = loader.get_template('no_map.html')
-    context = {}
+    context = {'form': form}
     return HttpResponse(template.render(context, request))
