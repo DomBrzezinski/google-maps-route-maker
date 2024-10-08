@@ -16,36 +16,39 @@
     </style>
   </head>
   <body>
-    <form id="form1" class="inputs">
-      <input id="starting_loctation" type="text" />
-      <label for="starting_loctation">Starting Location</label><br />
+    <form id="dataForm" class="inputs" name="dataForm">
+      <label for="starting_loctation">Starting Location: </label><br />
+      <input id="starting_loctation" type="text" name="starting_loctation" />
 
+      <label for="return_original">Return back here?</label><br />
       <input
         id="return_original"
         type="checkbox"
         onchange="return_original()"
+        name="return_original"
       />
-      <label for="return_original">Return back here?</label><br />
-    </form>
-    <form id="form2" class="inputs">
-      <input id="ending_location" type="text" />
-      <label for="ending_location_loctation">Ending Location</label><br />
-    </form>
-    <form id="form3" class="inputs">
+
+      <label for="ending_location">Ending Location: </label>
+      <input id="ending_location" type="text" name="ending_location" />
+      <br />
+
       <p>Travel Method:</p>
-      <input type="radio" id="Walking" name="travel_method" value="Walking" />
+
       <label for="Walking">Walking</label><br />
-      <input type="radio" id="Running" name="travel_method" value="Running" />
+      <input type="radio" id="Walking" name="travel_method" value="Walking" />
       <label for="Running">Running</label><br />
+      <input type="radio" id="Running" name="travel_method" value="Running" />
+      <label for="Bicycling">Bicycling</label>
       <input
         type="radio"
         id="Bicycling"
         name="travel_method"
         value="Bicycling"
       />
-      <label for="Bicycling">Bicycling</label>
 
       <p>Would you like to define route in terms of time or distance?</p>
+
+      <label for="Time">Time </label><br />
       <input
         type="radio"
         id="Time"
@@ -53,23 +56,29 @@
         value="Time"
         onchange="t_or_d()"
       />
-      <label for="Time">Time</label><br />
+
+      <label for="Distance">Distance </label>
       <input
         type="radio"
         id="Distance"
         name="time_or_distance"
         value="Distance"
       />
-      <label for="Distance">Distance</label>
-    </form>
-    <form id="timeform" class="inputs">
-      <input id="time_input" type="number" />
-      <label for="time_input"> Enter time in minutes </label>
-    </form>
-    <form id="distanceform" class="inputs">
+
+      <label for="time_input">Enter time in minutes: </label>
+      <input id="time_input" type="number" name="time_input" />
+
+      <label for="distance_input">Enter distance in kilometres: </label>
       <input id="distance_input" type="number" />
-      <label for="distance_input"> Enter distance in kilometres </label>
+
+      <input type="submit" value="Submit" />
     </form>
+
+    <form>
+      {% csrf_token %} {{form}}
+      <input type="submit" value="Submit" />
+    </form>
+
     <h1 id="msg"></h1>
     <h1 id="response"></h1>
     <div id="map"></div>
@@ -148,23 +157,23 @@
     <script>
       function return_original() {
         var checkbox = document.getElementById("return_original");
-        var end_loc_form = document.getElementById("form2");
+        var end_loc_inp = document.getElementById("ending_location");
         if (checkbox.checked) {
-          end_loc_form.style.display = "none";
+          end_loc_inp.style.display = "none";
         } else {
-          end_loc_form.style.display = "block";
+          end_loc_inp.style.display = "block";
         }
       }
       function t_or_d() {
         var time_box = document.getElementById("Time");
-        var timeform = document.getElementById("timeforme");
-        var distanceform = document.getElementById("distanceform");
+        var timeinp = document.getElementById("time_input");
+        var distanceinp = document.getElementById("distance_input");
         if (time_box.checked) {
-          timeform.style.display = "block";
-          distanceform.style.display = "none";
+          timeinp.style.display = "block";
+          distanceinp.style.display = "none";
         } else {
-          timeform.style.display = "none";
-          distanceform.style.display = "block";
+          timeinp.style.display = "none";
+          distanceinp.style.display = "block";
         }
       }
     </script>
