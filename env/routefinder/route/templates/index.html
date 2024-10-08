@@ -15,7 +15,7 @@
       }
     </style>
   </head>
-  <body>
+  <body onload="format_inputs()">
     <form id="dataForm" class="inputs" name="dataForm">
       <label for="starting_loctation">Starting Location: </label><br />
       <input id="starting_loctation" type="text" name="starting_loctation" />
@@ -175,6 +175,12 @@
           timeinp.style.display = "none";
           distanceinp.style.display = "block";
         }
+      }
+      function format_inputs() {
+        var timeform = document.getElementById("timeform");
+        var distanceform = document.getElementById("distanceform");
+        distanceform.style.display = "none";
+        timeform.style.display = "none";
       }
     </script>
     <script
