@@ -16,7 +16,14 @@
     </style>
   </head>
   <body onload="format_inputs()">
-    <form id="dataForm" class="inputs" name="dataForm">
+    <form
+      id="dataForm"
+      class="inputs"
+      name="dataForm"
+      action="/route/"
+      method="post"
+    >
+      {%csrf_token%}
       <label for="starting_loctation">Starting Location: </label><br />
       <input id="starting_loctation" type="text" name="starting_loctation" />
 
@@ -74,7 +81,7 @@
       <input type="submit" value="Submit" />
     </form>
 
-    <form>
+    <form action="/route/" method="post">
       {% csrf_token %} {{form}}
       <input type="submit" value="Submit" />
     </form>

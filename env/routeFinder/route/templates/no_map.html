@@ -16,7 +16,14 @@
     </style>
   </head>
   <body onload="format_inputs()">
-    <form id="dataForm" class="inputs" name="dataForm">
+    <form
+      id="dataForm"
+      class="inputs"
+      name="dataForm"
+      action="/route/"
+      method="post"
+    >
+      {%csrf_token%}
       <label for="starting_loctation">Starting Location: </label><br />
       <input id="starting_loctation" type="text" name="starting_loctation" />
 
@@ -34,21 +41,22 @@
 
       <p>Travel Method:</p>
 
-      <label for="Walking">Walking</label><br />
       <input type="radio" id="Walking" name="travel_method" value="Walking" />
-      <label for="Running">Running</label><br />
+      <label for="Walking">Walking</label><br />
+
       <input type="radio" id="Running" name="travel_method" value="Running" />
-      <label for="Bicycling">Bicycling</label>
+      <label for="Running">Running</label><br />
+
       <input
         type="radio"
         id="Bicycling"
         name="travel_method"
         value="Bicycling"
       />
+      <label for="Bicycling">Bicycling</label>
 
       <p>Would you like to define route in terms of time or distance?</p>
 
-      <label for="Time">Time </label><br />
       <input
         type="radio"
         id="Time"
@@ -56,17 +64,21 @@
         value="Time"
         onchange="t_or_d()"
       />
+      <label for="Time">Time </label><br />
 
-      <label for="Distance">Distance </label>
       <input
         type="radio"
         id="Distance"
         name="time_or_distance"
         value="Distance"
+        onchange="t_or_d"
       />
+      <label for="Distance">Distance </label>
 
       <label for="time_input">Enter time in minutes: </label>
       <input id="time_input" type="number" name="time_input" />
+
+      <br />
 
       <label for="distance_input">Enter distance in kilometres: </label>
       <input id="distance_input" type="number" />
@@ -74,8 +86,8 @@
       <input type="submit" value="Submit" />
     </form>
 
-    <form>
-      {% csrf_token %} {{form}}
+    <form action="/route/" method="post">
+      {%csrf_token%} {{form}}
       <input type="submit" value="Submit" />
     </form>
     <script>
