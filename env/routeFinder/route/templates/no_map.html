@@ -31,7 +31,7 @@
       <input
         id="id_return_original"
         type="checkbox"
-        onchange="return_original()"
+        onchange="return_o()"
         name="return_original"
       />
 
@@ -96,12 +96,8 @@
       <input type="submit" value="Submit" />
     </form>
 
-    <form action="/route/" method="post">
-      {%csrf_token%} {{form}}
-      <input type="submit" value="Submit" />
-    </form>
     <script>
-      function return_original() {
+      function return_o() {
         var checkbox = document.getElementById("id_return_original");
         var end_loc_inp = document.getElementById("id_ending_location");
         if (checkbox.checked) {
@@ -111,7 +107,7 @@
         }
       }
       function t_or_d() {
-        var time_box = document.getElementById("id_Time");
+        var time_box = document.getElementById("id_time_or_distance_0");
         var timeinp = document.getElementById("id_time_input");
         var distanceinp = document.getElementById("id_distance_input");
         if (time_box.checked) {
@@ -123,10 +119,10 @@
         }
       }
       function format_inputs() {
-        var timeform = document.getElementById("timeform");
-        var distanceform = document.getElementById("distanceform");
-        distanceform.style.display = "none";
-        timeform.style.display = "none";
+        var timeinput = document.getElementById("id_time_input");
+        var distanceinput = document.getElementById("id_distance_input");
+        timeinput.style.display = "none";
+        distanceinput.style.display = "none";
       }
     </script>
   </body>

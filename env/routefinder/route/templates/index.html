@@ -24,65 +24,75 @@
       method="post"
     >
       {%csrf_token%}
-      <label for="starting_loctation">Starting Location: </label><br />
-      <input id="starting_loctation" type="text" name="starting_loctation" />
+      <label for="id_starting_loctation">Starting Location: </label><br />
+      <input id="id_starting_loctation" type="text" name="starting_location" />
 
-      <label for="return_original">Return back here?</label><br />
+      <label for="id_return_original">Return back here?</label><br />
       <input
-        id="return_original"
+        id="id_return_original"
         type="checkbox"
-        onchange="return_original()"
+        onchange="return_o()"
         name="return_original"
       />
 
-      <label for="ending_location">Ending Location: </label>
-      <input id="ending_location" type="text" name="ending_location" />
+      <label for="id_ending_location">Ending Location: </label>
+      <input id="id_ending_location" type="text" name="ending_location" />
       <br />
 
       <p>Travel Method:</p>
 
-      <label for="Walking">Walking</label><br />
-      <input type="radio" id="Walking" name="travel_method" value="Walking" />
-      <label for="Running">Running</label><br />
-      <input type="radio" id="Running" name="travel_method" value="Running" />
-      <label for="Bicycling">Bicycling</label>
       <input
         type="radio"
-        id="Bicycling"
+        id="id_travel_method_0"
+        name="travel_method"
+        value="Walking"
+      />
+      <label for="id_travel_method_0">Walking</label><br />
+
+      <input
+        type="radio"
+        id="id_travel_method_1"
+        name="travel_method"
+        value="Running"
+      />
+      <label for="id_travel_method_1">Running</label><br />
+
+      <input
+        type="radio"
+        id="id_travel_method_2"
         name="travel_method"
         value="Bicycling"
       />
+      <label for="id_travel_method_2">Bicycling</label>
 
       <p>Would you like to define route in terms of time or distance?</p>
 
-      <label for="Time">Time </label><br />
       <input
         type="radio"
-        id="Time"
+        id="id_time_or_distance_0"
         name="time_or_distance"
-        value="Time"
+        value="1"
         onchange="t_or_d()"
       />
+      <label for="id_time_or_distance_0">Time </label><br />
 
-      <label for="Distance">Distance </label>
       <input
         type="radio"
-        id="Distance"
+        id="id_time_or_distance_1"
         name="time_or_distance"
-        value="Distance"
+        value="2"
+        onchange="t_or_d()"
       />
+      <label for="id_time_or_distance_1">Distance </label>
 
-      <label for="time_input">Enter time in minutes: </label>
-      <input id="time_input" type="number" name="time_input" />
+      <label for="id_time_input">Enter time in minutes: </label>
+      <input id="id_time_input" type="number" name="time_input" />
 
-      <label for="distance_input">Enter distance in kilometres: </label>
-      <input id="distance_input" type="number" />
+      <br />
 
-      <input type="submit" value="Submit" />
-    </form>
+      <label for="id_distance_input">Enter distance in kilometres: </label>
+      <input id="id_distance_input" type="number" name="distance_input" />
 
-    <form action="/route/" method="post">
-      {% csrf_token %} {{form}}
       <input type="submit" value="Submit" />
     </form>
 
@@ -162,9 +172,9 @@
       }
     </script>
     <script>
-      function return_original() {
-        var checkbox = document.getElementById("return_original");
-        var end_loc_inp = document.getElementById("ending_location");
+      function return_o() {
+        var checkbox = document.getElementById("id_return_original");
+        var end_loc_inp = document.getElementById("id_ending_location");
         if (checkbox.checked) {
           end_loc_inp.style.display = "none";
         } else {
@@ -172,9 +182,9 @@
         }
       }
       function t_or_d() {
-        var time_box = document.getElementById("Time");
-        var timeinp = document.getElementById("time_input");
-        var distanceinp = document.getElementById("distance_input");
+        var time_box = document.getElementById("id_time_or_distance_0");
+        var timeinp = document.getElementById("id_time_input");
+        var distanceinp = document.getElementById("id_distance_input");
         if (time_box.checked) {
           timeinp.style.display = "block";
           distanceinp.style.display = "none";
@@ -184,10 +194,10 @@
         }
       }
       function format_inputs() {
-        var timeform = document.getElementById("timeform");
-        var distanceform = document.getElementById("distanceform");
-        distanceform.style.display = "none";
-        timeform.style.display = "none";
+        var timeinput = document.getElementById("id_time_input");
+        var distanceinput = document.getElementById("id_distance_input");
+        timeinput.style.display = "none";
+        distanceinput.style.display = "none";
       }
     </script>
     <script
