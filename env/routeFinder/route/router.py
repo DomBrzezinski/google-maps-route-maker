@@ -184,7 +184,7 @@ def generate_route(**kwargs):
     
 
     waypoints_addresses = []
-    for waypoint in waypoints:
+    for waypoint in waypoints[1:4]:
         waypoints_addresses.append(gmaps.reverse_geocode(latlng=(str(waypoint[0]) + "," + str(waypoint[1])))[0]["formatted_address"])
     ### Converts all waypoints into addresses for the directions to use
     
@@ -200,14 +200,26 @@ def generate_route(**kwargs):
 
     return results,waypoints_addresses
 
-def route_main(**kwargs):
+def route_main(base_inputs):
+
     global start_coordinates, end_coordinates,average_coordinates,times_changed,waypoints
-    start_location = kwargs["starting_location"]
-    end_location = kwargs["ending_location"]
-    return_original = kwargs["return_original"]
-    travel_method =  kwargs["travel_method"]
-    time =  kwargs["time_input"]
-    distance = kwargs["distance_input"]
+
+
+    start_location = base_inputs["starting_location"]
+    end_location = base_inputs["ending_location"]
+    return_original = base_inputs["return_original"]
+    travel_method =  base_inputs["travel_method"].lower()
+    time =  base_inputs["time_input"]
+    distance = base_inputs["distance_input"]
+
+    distance *= 1000.0
+    distance = int(distance)
+
+
+    start_coordinates = gmaps.geocode(start_location)[0]["geometry"]["viewport"]["northeast"]
+    end_coordinates = gmaps.geocode(end_location)[0]["geometry"]["viewport"]["northeast"]
+    start_coordinates = [start_coordinates["lat"],start_coordinates["lng"]] ### Converts to a list [latitude,longitude]
+    end_coordinates = [end_coordinates["lat"],end_coordinates["lng"]] ### Converts to a list [latitude,longitude]
 
 
     # accept = False

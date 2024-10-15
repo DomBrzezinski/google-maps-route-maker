@@ -11,6 +11,7 @@ def getRoute(request):
         form = dataForm(request.POST)
         if form.is_valid():
             input_data = form.cleaned_data
+            print(input_data)
     else:
         form = dataForm()
 
@@ -18,7 +19,7 @@ def getRoute(request):
     with open(os.path.dirname(os.path.realpath(__file__)) + '\\key.txt', "r") as key_file:
         key_file.readline()
         website_key = key_file.readline()
-    route_info = router.route_main()
+    route_info = router.route_main(input_data)
     print(route_info)
     print(route_info[2])
     waypoints = route_info[1]
