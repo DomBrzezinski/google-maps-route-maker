@@ -200,91 +200,98 @@ def generate_route(**kwargs):
 
     return results,waypoints_addresses
 
-def route_main():
+def route_main(**kwargs):
     global start_coordinates, end_coordinates,average_coordinates,times_changed,waypoints
+    start_location = kwargs["starting_location"]
+    end_location = kwargs["ending_location"]
+    return_original = kwargs["return_original"]
+    travel_method =  kwargs["travel_method"]
+    time =  kwargs["time_input"]
+    distance = kwargs["distance_input"]
 
-    accept = False
-    while not accept:
-        accept = True
-        start_location = input("Your Address ")
-        start_coordinates = gmaps.geocode(start_location)
-        if start_coordinates ==  []: 
-            print("Invalid Address")
-            accept = False
-        else: start_coordinates = start_coordinates[0]["geometry"]["viewport"]["northeast"] ### Gets coordinates for start and end
+
+    # accept = False
+    # while not accept:
+    #     accept = True
+    #     start_location = input("Your Address ")
+    #     start_coordinates = gmaps.geocode(start_location)
+    #     if start_coordinates ==  []: 
+    #         print("Invalid Address")
+    #         accept = False
+    #     else: start_coordinates = start_coordinates[0]["geometry"]["viewport"]["northeast"] ### Gets coordinates for start and end
             
-    accept = False
-    while not accept:
-        accept = True
-        return_input = input("Would you like to return to here? ")    
-        if return_input == "yes":
-            end_location = start_location
-            end_coordinates = start_coordinates
-        elif return_input == "no": 
-            accept_ = False
-            while not accept_:
-                end_location = input("Ending Address ")
-                try:
-                    end_coordinates = gmaps.geocode(end_location)[0]["geometry"]["viewport"]["northeast"] ### Gets coordinates for start and end
-                    m_distance = distance_calculator(start_coordinates,end_coordinates) * 111139.0
-                    print(m_distance)
-                    if m_distance > 500000:
-                        print("too long")
-                        accept_ = False
-                    accept_ = True
-                except: accept_ = False            
-        else: accept = False
+    # accept = False
+    # while not accept:
+    #     accept = True
+    #     return_input = input("Would you like to return to here? ")    
+    #     if return_input == "yes":
+    #         end_location = start_location
+    #         end_coordinates = start_coordinates
+    #     elif return_input == "no": 
+    #         accept_ = False
+    #         while not accept_:
+    #             end_location = input("Ending Address ")
+    #             try:
+    #                 end_coordinates = gmaps.geocode(end_location)[0]["geometry"]["viewport"]["northeast"] ### Gets coordinates for start and end
+    #                 m_distance = distance_calculator(start_coordinates,end_coordinates) * 111139.0
+    #                 print(m_distance)
+    #                 if m_distance > 500000:
+    #                     print("too long")
+    #                     accept_ = False
+    #                 accept_ = True
+    #             except: accept_ = False            
+    #     else: accept = False
         
-    start_coordinates = [start_coordinates["lat"],start_coordinates["lng"]] ### Converts to a list [latitude,longitude]
-    end_coordinates = [end_coordinates["lat"],end_coordinates["lng"]] ### Converts to a list [latitude,longitude]
-    accept = False
-    while not accept:
-        travel_method = input("Would you like to travel by walking, bicycling, or running? ")
-        if travel_method == "walking" or travel_method == "bicycling" or travel_method == "running":
-            accept = True
+    # start_coordinates = [start_coordinates["lat"],start_coordinates["lng"]] ### Converts to a list [latitude,longitude]
+    # end_coordinates = [end_coordinates["lat"],end_coordinates["lng"]] ### Converts to a list [latitude,longitude]
+    # accept = False
+    # while not accept:
+    #     travel_method = input("Would you like to travel by walking, bicycling, or running? ")
+    #     if travel_method == "walking" or travel_method == "bicycling" or travel_method == "running":
+    #         accept = True
 
-    accept = False
-    while not accept:
-        accept = True
-        time_distance = input("Would you like to find a route by time or distance? ")
-        if time_distance == "distance":
-            accept_ = False
-            while not accept_:
-                accept_ = True
-                distance = input("What distance would you like to travel in kilometers? ")### NO MORE THAN 1 DECIMAL PLACE: ADD INPUT VALIDATION FOR ALL INPUTS
-                try:
-                    distance = float(distance)
-                    distance *= 1000.0
-                    distance = int(distance)
-                    time = ""
-                    if return_input == "no":
-                        if m_distance > distance*0.7:
-                            print("too short")
-                            accept_ = False
-                except: accept_ = False
-        elif time_distance == "time":
-            accept_ = False
-            while not accept_:
-                accept_ = True
-                time = input("How long would you like to travel for in minutes? ")
-                try:
-                    time = int(time)
-                    distance = ""
-                    if travel_method == "walking":
-                        if time < (m_distance/84)*0.7:
-                            print("too short")
-                            a = "a" + 4
-                    elif travel_method == "bicycling":
-                        if time < (m_distance/420)*0.7:
-                            print("too short")
-                            a = "a" + 4
-                    elif travel_method == "running":
-                        if time < (m_distance/300)*0.7:
-                            print("too short")
-                            a = "a" + 4
-                except: accept_ = False
-        else:
-            accept = False
+    # accept = False
+    # while not accept:
+    #     accept = True
+    #     time_distance = input("Would you like to find a route by time or distance? ")
+    #     if time_distance == "distance":
+    #         accept_ = False
+    #         while not accept_:
+    #             accept_ = True
+    #             distance = input("What distance would you like to travel in kilometers? ")### NO MORE THAN 1 DECIMAL PLACE: ADD INPUT VALIDATION FOR ALL INPUTS
+    #             try:
+    #                 distance = float(distance)
+    #                 distance *= 1000.0
+    #                 distance = int(distance)
+    #                 time = ""
+    #                 if return_input == "no":
+    #                     if m_distance > distance*0.7:
+    #                         print("too short")
+    #                         accept_ = False
+    #             except: accept_ = False
+    #     elif time_distance == "time":
+    #         accept_ = False
+    #         while not accept_:
+    #             accept_ = True
+    #             time = input("How long would you like to travel for in minutes? ")
+    #             try:
+    #                 time = int(time)
+    #                 distance = ""
+    #                 if travel_method == "walking":
+    #                     if time < (m_distance/84)*0.7:
+    #                         print("too short")
+    #                         a = "a" + 4
+    #                 elif travel_method == "bicycling":
+    #                     if time < (m_distance/420)*0.7:
+    #                         print("too short")
+    #                         a = "a" + 4
+    #                 elif travel_method == "running":
+    #                     if time < (m_distance/300)*0.7:
+    #                         print("too short")
+    #                         a = "a" + 4
+    #             except: accept_ = False
+    #     else:
+    #         accept = False
 
 
     ### Takes the information about the route from the user
