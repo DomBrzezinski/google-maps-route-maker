@@ -10,7 +10,7 @@ def getRoute(request):
     if request.method == "POST":
         form = dataForm(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
+            input_data = form.cleaned_data
     else:
         form = dataForm()
 
