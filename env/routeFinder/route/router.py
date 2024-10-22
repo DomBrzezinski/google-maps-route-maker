@@ -19,8 +19,8 @@ def rotate(coordinates):
     Rotates points about center of the semicircle by taking away the distance to the origin rotating about the origin with a matrix transformation
     This rotates by 90 degrees anticlockwise, and adds on the distance taken away at the end
     """
-    x1 = (maths.cos(maths.pi/4)*(coordinates[0] - center_of_semicircle[0])) + (maths.sin(maths.pi/4)*(coordinates[1] - center_of_semicircle[1]))
-    y1 = -1*(maths.sin(maths.pi/4)*(coordinates[0] - center_of_semicircle[0])) + (maths.cos(maths.pi/4)*(coordinates[1] - center_of_semicircle[1]))
+    x1 = (maths.cos(maths.pi/6)*(coordinates[0] - center_of_semicircle[0])) + (maths.sin(maths.pi/6)*(coordinates[1] - center_of_semicircle[1]))
+    y1 = -1*(maths.sin(maths.pi/6)*(coordinates[0] - center_of_semicircle[0])) + (maths.cos(maths.pi/6)*(coordinates[1] - center_of_semicircle[1]))
     x1 = x1 + center_of_semicircle[0]
     y1 = y1 + center_of_semicircle[1]
     return [x1,y1]
@@ -80,7 +80,7 @@ def generate_semicircle(**kwargs):
         ### Finds the direct gradient and distance between start and end, and finds the centre of the semicircle
 
         
-        waypoints[0] = start_coordinates
+        waypoints[0] = rotate(start_coordinates)
 
         waypoints[1] = rotate(waypoints[0])
 
@@ -88,7 +88,7 @@ def generate_semicircle(**kwargs):
 
         waypoints[3] = rotate(waypoints[2])
 
-        waypoints[4] = end_coordinates
+        waypoints[4] = rotate(waypoints[3])
         ### This creates the normal curve semicircle based on the direct distance between points, can be returned and checked and stretched
         
 
@@ -184,7 +184,7 @@ def generate_route(**kwargs):
     
 
     waypoints_addresses = []
-    for waypoint in waypoints[1:4]:
+    for waypoint in waypoints:
         waypoints_addresses.append(gmaps.reverse_geocode(latlng=(str(waypoint[0]) + "," + str(waypoint[1])))[0]["formatted_address"])
     ### Converts all waypoints into addresses for the directions to use
     
@@ -216,8 +216,8 @@ def route_main(base_inputs):
     distance = int(distance)
 
 
-    start_coordinates = gmaps.geocode(start_location)[0]["geometry"]["viewport"]["northeast"]
-    end_coordinates = gmaps.geocode(end_location)[0]["geometry"]["viewport"]["northeast"]
+    start_coordinates = gmaps.geocode(start_location)[0]["geometry"]["bounds"]["northeast"]
+    end_coordinates = gmaps.geocode(end_location)[0]["geometry"]["bounds"]["northeast"]
     start_coordinates = [start_coordinates["lat"],start_coordinates["lng"]] ### Converts to a list [latitude,longitude]
     end_coordinates = [end_coordinates["lat"],end_coordinates["lng"]] ### Converts to a list [latitude,longitude]
 
@@ -396,4 +396,4 @@ def route_main(base_inputs):
             else:
                 lngr = False
         ### If user input time, checks if the route needs to be longer or shorter
-    return [returned_waypoints, waypoints, travel_method]
+    return [returned_waypoints, waypoints, travel_method, start_coordinates, end_coordinates]
