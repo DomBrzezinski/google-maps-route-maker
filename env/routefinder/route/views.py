@@ -21,8 +21,10 @@ def getRoute(request):
         website_key = key_file.readline()
     route_info = router.route_main(input_data)
     print(route_info)
-    print(route_info[2])
     waypoints = route_info[1]
+    waypoints.append(route_info[4])
+    waypoints.insert(0, route_info[3])
+    print(waypoints)
     travel_method = route_info[2].upper()
     context = {
         'website_key': website_key,

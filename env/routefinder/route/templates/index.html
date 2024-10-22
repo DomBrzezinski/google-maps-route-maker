@@ -120,8 +120,8 @@
           waypoints[0][1]
         );
         const destinationB = new google.maps.LatLng(
-          waypoints[4][0],
-          waypoints[4][1]
+          waypoints[6][0],
+          waypoints[6][1]
         );
         let directionsService = new google.maps.DirectionsService();
         let directionsRenderer = new google.maps.DirectionsRenderer();
@@ -140,6 +140,16 @@
           stopover: true,
         });
         stop = new google.maps.LatLng(waypoints[3][0], waypoints[3][1]);
+        waypts.push({
+          location: stop,
+          stopover: true,
+        });
+        stop = new google.maps.LatLng(waypoints[4][0], waypoints[4][1]);
+        waypts.push({
+          location: stop,
+          stopover: true,
+        });
+        stop = new google.maps.LatLng(waypoints[5][0], waypoints[5][1]);
         waypts.push({
           location: stop,
           stopover: true,
