@@ -139,7 +139,7 @@ def generate_route(**kwargs):
     if start_coordinates == end_coordinates:
         if times_changed == 0:
             if kwargs["distance"] != "":
-                radius = kwargs["distance"]/(maths.pi + 2.0)
+                radius = (kwargs["distance"]/(maths.pi + 2.0))/1.2
             ### Finds the optimum radius of a semicircle route for the distance given
 
 
@@ -215,7 +215,9 @@ def route_main(base_inputs):
     distance *= 1000.0
     distance = int(distance)
 
-
+    if return_original:
+        end_location = start_location
+    
     start_coordinates = gmaps.geocode(start_location)[0]["geometry"]["bounds"]["northeast"]
     end_coordinates = gmaps.geocode(end_location)[0]["geometry"]["bounds"]["northeast"]
     start_coordinates = [start_coordinates["lat"],start_coordinates["lng"]] ### Converts to a list [latitude,longitude]
