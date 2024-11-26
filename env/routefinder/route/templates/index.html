@@ -110,6 +110,7 @@
         var options = {
           zoom: 8,
           center: { lat: 51.51984798019271, lng: -1.658301414333887 },
+          mapId: '2d375d61697a7a62'
         };
         var map = new google.maps.Map(document.getElementById("map"), options);
         const geocoder = new google.maps.Geocoder();
@@ -219,7 +220,7 @@
       async
       defer
       id="map"
-      src="https://maps.googleapis.com/maps/api/js?key={{website_key}}&callback=initMap&v=weekly"
+      src="https://maps.googleapis.com/maps/api/js?key={{website_key}}&map_ids=2d375d61697a7a62&callback=initMap&v=weekly"
     ></script>
   </body>
 </html>
