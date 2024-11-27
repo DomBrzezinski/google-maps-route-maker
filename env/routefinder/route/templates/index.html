@@ -130,31 +130,13 @@
 
         var waypts = [];
 
-        stop = new google.maps.LatLng(waypoints[1][0], waypoints[1][1]);
-        waypts.push({
-          location: stop,
-          stopover: true,
-        });
-        stop = new google.maps.LatLng(waypoints[2][0], waypoints[2][1]);
-        waypts.push({
-          location: stop,
-          stopover: true,
-        });
-        stop = new google.maps.LatLng(waypoints[3][0], waypoints[3][1]);
-        waypts.push({
-          location: stop,
-          stopover: true,
-        });
-        stop = new google.maps.LatLng(waypoints[4][0], waypoints[4][1]);
-        waypts.push({
-          location: stop,
-          stopover: true,
-        });
-        stop = new google.maps.LatLng(waypoints[5][0], waypoints[5][1]);
-        waypts.push({
-          location: stop,
-          stopover: true,
-        });
+        for(let i = 1; i < 6; i++){
+          stop = new google.maps.LatLng(waypoints[i][0], waypoints[i][1]);
+          waypts.push({
+            location: stop,
+            stopover: true,
+          });
+        }
 
         const route = {
           origin: origin1,
