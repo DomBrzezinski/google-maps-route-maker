@@ -30,7 +30,12 @@ def getRoute(request):
         'website_key': website_key,
         'waypoints': waypoints,
         'travel_method': travel_method,
-        'form': form
+        'form': form,
+        'start_location': input_data["starting_location"],
+        'end_location': input_data["ending_location"],
+        'return_original': input_data["return_original"],
+        'time':  input_data["time_input"],
+        'distance': input_data["distance_input"],     
     }
     template = loader.get_template('index.html')
     return HttpResponse(template.render(context, request))
