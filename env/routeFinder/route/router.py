@@ -211,12 +211,17 @@ def route_main(base_inputs):
     travel_method =  base_inputs["travel_method"].lower()
     time =  base_inputs["time_input"]
     distance = base_inputs["distance_input"]
+    time_or_distance = base_inputs["time_or_distance"]
 
     distance *= 1000.0
     distance = int(distance)
 
     if return_original:
         end_location = start_location
+
+
+    if time_or_distance.lower() == "time": distance = ""
+    else: time = ""
     
     start_coordinates = gmaps.geocode(start_location)[0]["geometry"]["bounds"]["northeast"]
     end_coordinates = gmaps.geocode(end_location)[0]["geometry"]["bounds"]["northeast"]
@@ -398,4 +403,4 @@ def route_main(base_inputs):
             else:
                 lngr = False
         ### If user input time, checks if the route needs to be longer or shorter
-    return [returned_waypoints, waypoints, travel_method, start_coordinates, end_coordinates]
+    return [returned_waypoints, waypoints, travel_method, start_coordinates, end_coordinates, route_distance, route_time]

@@ -219,10 +219,10 @@
             } else {
               document.getElementById("msg").innerHTML +=
                 "{{travel_method}} Distance is " +
-                directionsData.distance.text +
-                " (" +
-                directionsData.duration.text +
-                ").";
+                '{{actual_distance}}' +
+                "m (" +
+                '{{actual_time}}' +
+                " mins).";
             }
           }
         });

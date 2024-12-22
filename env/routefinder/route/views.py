@@ -12,10 +12,11 @@ def getRoute(request):
         if form.is_valid():
             input_data = form.cleaned_data
             print(input_data)
+        else:
+            pass #REDIRECT TO /INPUTS TO REFILL THE FORM PLEASSESEEE
     else:
         form = dataForm()
 
-    
     with open(os.path.dirname(os.path.realpath(__file__)) + '\\key.txt', "r") as key_file:
         key_file.readline()
         website_key = key_file.readline()
@@ -35,8 +36,11 @@ def getRoute(request):
         'end_location': input_data["ending_location"],
         'return_original': input_data["return_original"],
         'time':  input_data["time_input"],
-        'distance': input_data["distance_input"],     
+        'distance': input_data["distance_input"],
+        'actual_distance': route_info[5],
+        'actual_time': route_info[6]
     }
+    form = dataForm()
     template = loader.get_template('index.html')
     return HttpResponse(template.render(context, request))
 
