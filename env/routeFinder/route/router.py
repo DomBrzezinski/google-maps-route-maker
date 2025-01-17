@@ -59,7 +59,7 @@ def generate_semicircle(**kwargs):
             Waypoints(global variable)
     """
     global radius
-
+    print(start_coordinates, end_coordinates)
     if start_coordinates == end_coordinates:
         waypoints[0] = [start_coordinates[0] - radius, start_coordinates[1]]
         waypoints[1] = [start_coordinates[0] - (maths.sin(45)*radius),
@@ -158,6 +158,7 @@ def generate_route(**kwargs):
 
 
         else:  ### If this is not the first call of the function, ie it has to be changed from original radius
+            print(kwargs["longer"])
             if kwargs["longer"]:
                 radius *= 1.2
             else:
@@ -213,15 +214,16 @@ def route_main(base_inputs):
     distance = base_inputs["distance_input"]
     time_or_distance = base_inputs["time_or_distance"]
 
-    distance *= 1000.0
-    distance = int(distance)
+    if time_or_distance == "1": distance = ""
+    else: time = ""
+
+    if distance != "":
+        distance *= 1000.0
+        distance = int(distance)
 
     if return_original:
         end_location = start_location
 
-
-    if time_or_distance.lower() == "time": distance = ""
-    else: time = ""
     
     start_coordinates = gmaps.geocode(start_location)[0]["geometry"]["bounds"]["northeast"]
     end_coordinates = gmaps.geocode(end_location)[0]["geometry"]["bounds"]["northeast"]

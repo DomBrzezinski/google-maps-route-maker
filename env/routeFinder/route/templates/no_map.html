@@ -164,9 +164,36 @@
       }
       function format_inputs() {
         var timeinput = document.getElementById("id_time_input");
+        var timelabel = document.getElementById("id_time_label");
         var distanceinput = document.getElementById("id_distance_input");
+        var distancelabel = document.getElementById("id_distance_label");
         timeinput.style.display = "none";
         distanceinput.style.display = "none";
+        timelabel.style.display = "none";
+        distancelabel.style.display = "none";
+
+        var travel_method = "{{travel_method}}";
+
+        if (travel_method == "Walking") {
+          document.dataForm.travel_method[0].checked = true;
+        } else if (travel_method == "Running") {
+          document.dataForm.travel_method[1].checked = true;
+        } else if (travel_method == "Bicycling") {
+          document.dataForm.travel_method[2].checked = true;
+        }
+
+        if ("{{time_or_distance}}" == "2") {
+          document.dataForm.time_or_distance[1].checked = true;
+        } else if ("{{time_or_distance}}" == "1") {
+          document.dataForm.time_or_distance[0].checked = true;
+        }
+
+        if ("{{return_original}}" == "True") {
+          document.dataForm.return_original.checked = true;
+        } else {
+          document.dataForm.return_original.checked = false;
+        }
+        t_or_d();
       }
     </script>
   </body>

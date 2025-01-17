@@ -284,6 +284,12 @@
         } else if ("{{distance}}" == "None") {
           document.dataForm.time_or_distance[0].checked = true;
         }
+
+        if ("{{return_original}}" == "True") {
+          document.dataForm.return_original.checked = true;
+        } else {
+          document.dataForm.return_original.checked = false;
+        }
         t_or_d();
       }
     </script>
