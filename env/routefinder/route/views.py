@@ -25,9 +25,12 @@ def getRoute(request):
             global form_data
             form_data = form.data
             return HttpResponseRedirect('/inputs/')
-        
+               
     else:
         form = dataForm()
+
+    if not (form.is_valid()):
+        return HttpResponseRedirect('/inputs/')
 
     with open(os.path.dirname(os.path.realpath(__file__)) + '\\key.txt', "r") as key_file:
         key_file.readline()
@@ -64,7 +67,6 @@ def inputs(request):
         a = form_data['travel_method']
         # try: return_original = form_data['return_original']
         # except MultiValueDictKeyError: return_original = False
-        # if return_original == "": return_original = False
         context = {
             'form': form,
             'travel_method': form_data['travel_method'],
