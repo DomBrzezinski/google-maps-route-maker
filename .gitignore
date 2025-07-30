@@ -12,3 +12,4 @@ env/Scripts/
 env/Include/
 git-filter-repo.py
 env/routeFinder/route/coordinates.py
+run_server.cmd

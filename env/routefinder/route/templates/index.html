@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -5,15 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <style>
-      #map {
-        height: 400px;
-        width: 100%;
-      }
-      .inputs {
-        font-family: Courier New;
-      }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
   </head>
   <body onload="format_inputs()">
     <form
@@ -62,7 +55,7 @@
         name="travel_method"
         value="Walking"
       />
-      <label for="id_travel_method_0">Walking</label><br />
+      <label class="radio" for="id_travel_method_0">Walking</label><br />
 
       <input
         type="radio"
@@ -70,7 +63,7 @@
         name="travel_method"
         value="Running"
       />
-      <label for="id_travel_method_1">Running</label><br />
+      <label class="radio" for="id_travel_method_1">Running</label><br />
 
       <input
         type="radio"
@@ -78,7 +71,7 @@
         name="travel_method"
         value="Bicycling"
       />
-      <label for="id_travel_method_2">Bicycling</label>
+      <label class="radio" for="id_travel_method_2">Bicycling</label>
 
       <br />
 
@@ -91,7 +84,7 @@
         value="1"
         onchange="t_or_d()"
       />
-      <label for="id_time_or_distance_0">Time </label><br />
+      <label class="radio" for="id_time_or_distance_0">Time </label><br />
 
       <input
         type="radio"
@@ -100,7 +93,7 @@
         value="2"
         onchange="t_or_d()"
       />
-      <label for="id_time_or_distance_1">Distance </label>
+      <label class="radio" for="id_time_or_distance_1">Distance </label>
 
       <br />
       <br />
