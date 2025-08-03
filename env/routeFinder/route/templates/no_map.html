@@ -20,14 +20,16 @@
       <div class="whole-form">
         <div class="form-inputs">
           <div class="locations-block input-block">
-            <label for="id_starting_location">Starting Location: </label>
-            <input
-              id="id_starting_location"
-              type="text"
-              name="starting_location"
-              value="{{start_location}}"
-            />
-            <br />
+            <label class="text-input" for="id_starting_location"
+              >Starting Location:
+              <input
+                class="textbox"
+                id="id_starting_location"
+                type="text"
+                name="starting_location"
+                value="{{start_location}}"
+              />
+            </label>
 
             <label class="checkmark" for="id_return_original"
               >Return here?
@@ -42,15 +44,17 @@
             </label>
             <br />
 
-            <label id="ending_label" for="id_ending_location"
+            <label class="text-input" id="ending_label" for="id_ending_location"
               >Ending Location:
+
+              <input
+                class="textbox"
+                id="id_ending_location"
+                type="text"
+                name="ending_location"
+                value="{{end_location}}"
+              />
             </label>
-            <input
-              id="id_ending_location"
-              type="text"
-              name="ending_location"
-              value="{{end_location}}"
-            />
           </div>
 
           <div class="travel-method-block input-block">
@@ -119,26 +123,33 @@
             <br />
             <br />
 
-            <label id="id_time_label" for="id_time_input"
-              >Enter time in minutes:
-            </label>
-            <input
-              id="id_time_input"
-              type="number"
-              name="time_input"
-              value="{{time}}"
-            />
+            <label class="text-input" id="id_time_label" for="id_time_input"
+              >Time (minutes):
 
-            <label id="id_distance_label" for="id_distance_input"
-              >Enter distance in kilometres:
+              <input
+                class="textbox"
+                id="id_time_input"
+                type="number"
+                name="time_input"
+                value="{{time}}"
+              />
             </label>
-            <input
-              id="id_distance_input"
-              type="number"
-              step="0.1"
-              name="distance_input"
-              value="{{distance}}"
-            />
+
+            <label
+              class="text-input"
+              id="id_distance_label"
+              for="id_distance_input"
+              >Distance (km):
+
+              <input
+                class="textbox"
+                id="id_distance_input"
+                type="number"
+                step="0.1"
+                name="distance_input"
+                value="{{distance}}"
+              />
+            </label>
           </div>
         </div>
         <input type="submit" value="Submit" />
