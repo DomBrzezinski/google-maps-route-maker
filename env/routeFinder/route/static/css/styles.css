@@ -49,9 +49,11 @@ input[type="number"] {
   border: 5px solid #0a3f03;
   border-radius: 10px;
   box-sizing: border-box;
-  font-size: 20px;
   background-color: #719e66;
+  font-family: cascadia-code, monospace;
+  font-weight: bold;
   font-size: 15px;
+  color: white;
 }
 input[type="submit"] {
   background-color: #0a3f03;
@@ -63,7 +65,6 @@ input[type="submit"] {
   cursor: pointer;
   font-size: 20px;
   height: auto;
-  font-family: cascadia-code, monospace;
   font-size: 30px;
   align-self: right;
 }
