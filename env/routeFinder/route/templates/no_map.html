@@ -153,6 +153,9 @@
           </div>
         </div>
         <input type="submit" value="Submit" />
+        <p id="error-messages">{{form_errors}}</p>
+          
+        </p>
       </div>
     </form>
 
@@ -186,6 +189,7 @@
           distanceinp.style.display = "block";
           distancelabel.style.display = "block";
         }
+        return_o();
       }
       function format_inputs() {
         var timeinput = document.getElementById("id_time_input");
