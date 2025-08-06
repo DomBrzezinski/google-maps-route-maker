@@ -58,7 +58,7 @@
           </div>
 
           <div class="travel-method-block input-block">
-            <p>Travel Method:</p>
+            <p id="id_travel_method">Travel Method:</p>
 
             <label class="radio" for="id_travel_method_0"
               >Walking
@@ -94,7 +94,7 @@
             </label>
           </div>
           <div class="time-or-distance-block input-block">
-            <p>In time or distance?</p>
+            <p id="id_time_or_distance">In time or distance?</p>
 
             <label class="radio" for="id_time_or_distance_0"
               >Time
@@ -222,6 +222,20 @@
         } else {
           document.dataForm.return_original.checked = false;
         }
+        var errors = "{{form_errors}}";
+        errors = errors.replace(/&#x27;/g, '"');
+        var dict_errors = JSON.parse(errors);
+
+        for (const [key, value] of Object.entries(dict_errors)) {
+          var id = "id_" + key;
+          var error_element = document.getElementById(id)
+          if (error_element.tagName == "P"){
+            error_element.style.color = "red";
+          }else if (error_element.tagName == "INPUT") {
+            error_element.style.border = "5px solid red";
+          }
+        }
+
         t_or_d();
       }
     </script>

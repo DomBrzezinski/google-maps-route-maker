@@ -103,6 +103,10 @@ def inputs(request):
             context = try_or_none(form_data, context, in_name[0], in_name[1])
 
         print(form_data["errors"])
+        errors = form_data["errors"]
+        for field in errors:
+            errors[field] = str(errors[field]).replace("[ValidationError(['", "").replace("'])]", "")
+
         context["form_errors"] = form_data["errors"]
 
     return HttpResponse(template.render(context, request))
