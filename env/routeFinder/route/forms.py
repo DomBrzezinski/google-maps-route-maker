@@ -36,12 +36,15 @@ class dataForm(forms.Form):
 
         gmaps = googlemaps.Client(key=directions_key)
 
+        valid = True
+
         if not start_loc:
             self.add_error('starting_location', "Please enter a starting location")
             # raise ValidationError("Please enter a starting location")
         else:
             if gmaps.geocode(start_loc) == []:
                 self.add_error('starting_location', "Invalid starting location")
+                valid = False
                 # raise ValidationError("Invalid starting location")
             # Checks if the starting location is valid
 
@@ -58,10 +61,11 @@ class dataForm(forms.Form):
             else:
                 if gmaps.geocode(end_loc) == []:
                     self.add_error('ending_location', "Invalid ending location")
+                    valid = False
                     # raise ValidationError("Invalid ending location")
                 # Checks if the ending location is valid
 
-            if start_loc and end_loc:
+            if start_loc and end_loc and valid:
                 directions = gmaps.directions(start_loc, end_loc, mode=travel_method.lower())
 
                 route_distance = 0 

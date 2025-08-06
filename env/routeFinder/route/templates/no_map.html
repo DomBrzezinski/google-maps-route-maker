@@ -67,6 +67,7 @@
                 id="id_travel_method_0"
                 name="travel_method"
                 value="Walking"
+                onclick='document.getElementById("id_travel_method").style.color="white"'
               />
               <span class="radio_button"></span> </label
             ><br />
@@ -78,6 +79,7 @@
                 id="id_travel_method_1"
                 name="travel_method"
                 value="Running"
+                onclick='document.getElementById("id_travel_method").style.color="white"'
               />
               <span class="radio_button"></span> </label
             ><br />
@@ -89,6 +91,7 @@
                 id="id_travel_method_2"
                 name="travel_method"
                 value="Bicycling"
+                onclick='document.getElementById("id_travel_method").style.color="white"'
               />
               <span class="radio_button"></span>
             </label>
@@ -104,6 +107,7 @@
                 name="time_or_distance"
                 value="1"
                 onchange="t_or_d()"
+                onclick='document.getElementById("id_time_or_distance").style.color="white"'
               />
               <span class="radio_button"></span> </label
             ><br />
@@ -116,6 +120,7 @@
                 name="time_or_distance"
                 value="2"
                 onchange="t_or_d()"
+                onclick='document.getElementById("id_time_or_distance").style.color="white"'
               />
               <span class="radio_button"></span>
             </label>
@@ -153,7 +158,7 @@
           </div>
         </div>
         <input type="submit" value="Submit" />
-        <p id="error-messages">{{form_errors}}</p>
+        <p id="error-messages" style="color:red"></p>
           
         </p>
       </div>
@@ -225,7 +230,7 @@
         var errors = "{{form_errors}}";
         errors = errors.replace(/&#x27;/g, '"');
         var dict_errors = JSON.parse(errors);
-
+        var display_errors = "";
         for (const [key, value] of Object.entries(dict_errors)) {
           var id = "id_" + key;
           var error_element = document.getElementById(id)
@@ -234,7 +239,14 @@
           }else if (error_element.tagName == "INPUT") {
             error_element.style.border = "5px solid red";
           }
+
+          if (["Invalid starting location", "Invalid ending location", "The route will take longer than the time you have specified", "The route is longer than the distance you have specified"].includes(value)){
+            display_errors = display_errors + value + "\n";  
+          }
+
         }
+        console.log(display_errors)
+        document.getElementById("error-messages").innerText = display_errors;
 
         t_or_d();
       }
